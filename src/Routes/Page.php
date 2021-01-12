@@ -35,19 +35,21 @@ class Page implements IRoute{
 
         $classes = get_declared_classes();
         
+        $aICmsMiddlewares=[];
         foreach($classes as $cls){
             $class = new \ReflectionClass($cls);
             if ( $class->implementsInterface('Tualo\Office\CMS\ICmsMiddleware') ) {
-                echo $cls;
+                $aICmsMiddlewares[$cls] = $cls;
+                $a=explode("\\",$cls);
+                $aICmsMiddlewares[array_pop($a)] = $cls;
+
             }
         }
-        exit();
-                    
         foreach($cmsmiddlewares as $cmsmiddleware){
             if (
-                class_exists($cmsmiddleware['middleware']) && 
-                is_subclass_of($cmsmiddleware['middleware'],'CMSMiddleWare',true)){
-                $cmsmiddleware['middleware']::run($request,$result);
+                isset($aICmsMiddlewares[$cmsmiddleware['middleware']])
+            ){
+                $aICmsMiddlewares[$cmsmiddleware['middleware']]::run($request,$result);
             }else{
                 throw new \Exception("cannot get ".$cmsmiddleware['middleware']);
             }
