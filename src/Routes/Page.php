@@ -1,16 +1,63 @@
 <?php
-namespace tualo\Office\CMS\Routes;
-use tualo\Office\Basic\TualoApplication;
-use tualo\Office\Basic\Route;
-use tualo\Office\Basic\IRoute;
+namespace Tualo\Office\CMS\Routes;
+use Tualo\Office\Basic\TualoApplication;
+use Tualo\Office\Basic\Route;
+use Tualo\Office\Basic\IRoute;
 
-use tualo\Office\PUG\PUGRenderingHelper;
-use tualo\Office\CMS\CMSMiddlewareWMHelper;
-use tualo\Office\CMS\CMSRenderingHelper;
+use Tualo\Office\PUG\PUGRenderingHelper;
+use Tualo\Office\CMS\CMSMiddlewareWMHelper;
+use Tualo\Office\CMS\CMSRenderingHelper;
 
 class Page implements IRoute{
-    public static function register(){
+
+    public static function cmsMiddleware($db,$path){
+        CMSMiddlewareWMHelper::$db=$db;
+
+        $cmsmiddlewares = $db->direct('
+            select 
+                page_content.id,
+                page_content_middlewares.middleware
+            from 
+                page_content_middlewares 
+                join page_content on 
+                page_content_middlewares.page_content_id = page_content.id
+            where 
+                page_content.id = {path}
+            order by 
+                position
+        ',array('path'=> $path ));
+
+        $request = [];
+        $result = [];
+        $request['session'] = json_decode(json_encode($_SESSION),true);
+        $request['request'] = json_decode(json_encode($_REQUEST),true);
+
+
+        $classes = get_declared_classes();
         
+        foreach($classes as $cls){
+            $class = new \ReflectionClass($cls);
+            if ( $class->implementsInterface('Tualo\Office\CMS\ICmsMiddleware') ) {
+                echo $cls;
+            }
+        }
+        exit();
+                    
+        foreach($cmsmiddlewares as $cmsmiddleware){
+            if (
+                class_exists($cmsmiddleware['middleware']) && 
+                is_subclass_of($cmsmiddleware['middleware'],'CMSMiddleWare',true)){
+                $cmsmiddleware['middleware']::run($request,$result);
+            }else{
+                throw new \Exception("cannot get ".$cmsmiddleware['middleware']);
+            }
+        }
+
+        CMSMiddlewareWMHelper::$request=$request;
+        CMSMiddlewareWMHelper::$result=$result;
+    }
+
+    public static function register(){
 
 
         Route::add('/cms/page/(?P<path>.*)',function($matches){
@@ -20,6 +67,8 @@ class Page implements IRoute{
             $db = TualoApplication::get('session')->getDB();
             $session = TualoApplication::get('session');
             try {
+                self::cmsMiddleware($db,$path);
+
                 $data = $db->singleRow('select pug_file,page_title,page_content from page_content where id={path}',array('path'=>$path));
                 if ($data){
 
@@ -76,6 +125,7 @@ class Page implements IRoute{
 
 
             }catch(\Exception $e){
+                echo $e->getMessage();
                 TualoApplication::result('msg', $e->getMessage());
             }
             TualoApplication::contenttype('text/html');

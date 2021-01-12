@@ -1,6 +1,6 @@
 <?php
-namespace tualo\Office\CMS;
-use tualo\Office\Basic\TualoApplication;
+namespace Tualo\Office\CMS;
+use Tualo\Office\Basic\TualoApplication;
 
 class CMSRenderingHelper{
     public static function pugPath($db){

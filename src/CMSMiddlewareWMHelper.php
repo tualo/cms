@@ -1,7 +1,7 @@
 <?php
-namespace tualo\Office\CMS;
-use tualo\Office\Basic\TualoApplication;
-use tualo\Office\PUG\PUGRenderingHelper;
+namespace Tualo\Office\CMS;
+use Tualo\Office\Basic\TualoApplication;
+use Tualo\Office\PUG\PUGRenderingHelper;
 
 class CMSMiddlewareWMHelper{
     public static $db = null;
