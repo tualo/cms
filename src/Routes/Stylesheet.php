@@ -10,7 +10,7 @@ use Tualo\Office\CMS\CMSRenderingHelper;
 
 class Stylesheet implements IRoute{
     public static function register(){
-        
+
         Route::add('/cms/page/stylesheet/(?P<id>[\w\-\_]+)',function($matches){
 
 
@@ -20,11 +20,11 @@ class Stylesheet implements IRoute{
                 $data = $db->singleValue('select group_concat(css separator \'
                 \') css from view_readtable_ds_renderer_stylesheet_groups_assign where pug_id={id} and active=1 ',$matches,'css' );
                 TualoApplication::body( $data );
-        
+                TualoApplication::contenttype('text/css');
+                Route::$finished = true;
             }catch(\Exception $e){
                 TualoApplication::result('msg', $e->getMessage());
             }
-            TualoApplication::contenttype('text/css');
         },array('get'),true);
 
 

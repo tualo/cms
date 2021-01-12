@@ -118,19 +118,21 @@ class Page implements IRoute{
                     /*}*/
 
 
+                    Route::$finished = true;
                     TualoApplication::body( $html );
+                    TualoApplication::contenttype('text/html');
+                    
                     if (isset( $_SESSION['session_error'] )){
                         unset($_SESSION['session_error']);
                     }
 
+    
                 }
 
 
             }catch(\Exception $e){
-                echo $e->getMessage();
                 TualoApplication::result('msg', $e->getMessage());
             }
-            TualoApplication::contenttype('text/html');
         },array('get','post'),true);
 
 
