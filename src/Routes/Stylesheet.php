@@ -8,7 +8,7 @@ use Tualo\Office\PUG\PUGRenderingHelper;
 use Tualo\Office\CMS\CMSMiddlewareWMHelper;
 use Tualo\Office\CMS\CMSRenderingHelper;
 
-class Page implements IRoute{
+class Stylesheet implements IRoute{
     public static function register(){
         
         Route::add('/cms/page/stylesheet/(?P<id>[\w\-\_]+)',function($matches){
