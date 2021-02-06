@@ -66,6 +66,8 @@ class Page implements IRoute{
 
             $path = $matches['path'];
 
+
+
             $db = TualoApplication::get('session')->getDB();
             $session = TualoApplication::get('session');
             try {
@@ -107,15 +109,9 @@ class Page implements IRoute{
                     $GLOBALS['pug_merge'] = [];
                     $GLOBALS['pug_merge']['cms']=CMSMiddlewareWMHelper::$result;
                     
-                     $hash = md5( $template.$_REQUEST['id'] );
-                    /*
-                    if (file_exists(TualoApplication::get("basePath").'/cache/'.$db->dbname.'/readcache/'.$hash)){
-                        $html = file_get_contents(TualoApplication::get("basePath").'/cache/'.$db->dbname.'/readcache/'.$hash);
-                    }else{
-                    */
-                        $html = PUGRenderingHelper::render( PUGRenderingHelper::getIDArray($matches,$_REQUEST) ,$template, $_REQUEST);
-                        file_put_contents(TualoApplication::get("basePath").'/cache/'.$db->dbname.'/readcache/'.$hash,$html);
-                    /*}*/
+                    $hash = md5( $template.$_REQUEST['id'] );
+                    $html = PUGRenderingHelper::render( PUGRenderingHelper::getIDArray($matches,$_REQUEST) ,$template, $_REQUEST);
+                    file_put_contents(TualoApplication::get("basePath").'/cache/'.$db->dbname.'/readcache/'.$hash,$html);
 
 
                     Route::$finished = true;
@@ -131,6 +127,7 @@ class Page implements IRoute{
 
 
             }catch(\Exception $e){
+                echo $e->getMessage();
                 TualoApplication::result('msg', $e->getMessage());
             }
         },array('get','post'),true);
