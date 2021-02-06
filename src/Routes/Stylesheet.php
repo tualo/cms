@@ -26,7 +26,6 @@ class Stylesheet implements IRoute{
                 TualoApplication::result('msg', $e->getMessage());
             }
         },array('get'),true);
-
-
+        
     }
 }
