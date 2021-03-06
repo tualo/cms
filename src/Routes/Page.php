@@ -64,6 +64,7 @@ class Page implements IRoute{
 
         Route::add('/cms/page/(?P<path>.*)',function($matches){
 
+            TualoApplication::timing("cms/page",'');
             $path = $matches['path'];
 
 
@@ -71,9 +72,12 @@ class Page implements IRoute{
             $db = TualoApplication::get('session')->getDB();
             $session = TualoApplication::get('session');
             try {
+                TualoApplication::timing("before cmsMiddleware",'');
                 self::cmsMiddleware($db,$path);
+                TualoApplication::timing("after cmsMiddleware",'');
 
                 $data = $db->singleRow('select pug_file,page_title,page_content from page_content where id={path}',array('path'=>$path));
+                TualoApplication::timing("select page_content",'');
                 if ($data){
 
 

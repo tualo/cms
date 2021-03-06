@@ -12,7 +12,7 @@ class Stylesheet implements IRoute{
     public static function register(){
 
         Route::add('/cms/page/stylesheet/(?P<id>[\w\-\_]+)',function($matches){
-
+            TualoApplication::timing( 'stylesheet' );
 
             $db = TualoApplication::get('session')->getDB();
             $session = TualoApplication::get('session');

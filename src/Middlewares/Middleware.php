@@ -14,24 +14,6 @@ class Middleware implements IMiddleware{
                 App::addError($e->getMessage());
             }
         },-100);
-        App::use('cms_time',function(){
-            try{
-                
-                if(!isset($_SESSION['skeleton_time']))$_SESSION['skeleton_time']=[];
-                if(!isset($_SESSION['skeleton_time_loggedIn']))$_SESSION['skeleton_time_loggedIn']=[];
-                if (count($_SESSION['skeleton_time'])>10) $_SESSION['skeleton_time']=[];
-                if (count($_SESSION['skeleton_time_loggedIn'])>10) $_SESSION['skeleton_time_loggedIn']=[];
-                
-                $_SESSION['skeleton_time'][]=date('Y-m-d H:i:s',time());
-                if (isset($_SESSION['tualoapplication']) && isset($_SESSION['tualoapplication']['loggedIn']) && ($_SESSION['tualoapplication']['loggedIn']) ){
-                    $_SESSION['skeleton_time_loggedIn'][]=date('Y-m-d H:i:s',time());
-                }
-                session_commit();
-                
-            }catch(\Exception $e){
-                App::set('maintanceMode','on');
-                App::addError($e->getMessage());
-            }
-        },200);
+
     }
 }
