@@ -45,13 +45,17 @@ class Page implements IRoute{
 
             }
         }
+
+        $result['wm_state']='maintenance';
+        
         foreach($cmsmiddlewares as $cmsmiddleware){
             if (
                 isset($aICmsMiddlewares[$cmsmiddleware['middleware']])
             ){
                 $aICmsMiddlewares[$cmsmiddleware['middleware']]::run($request,$result);
             }else{
-                throw new \Exception("cannot get ".$cmsmiddleware['middleware']);
+                TualoApplication::logger('CMS('.__FILE__.')')->error("cannot get ".$cmsmiddleware['middleware']);
+                //throw new \Exception("cannot get ".$cmsmiddleware['middleware']);
             }
         }
 
