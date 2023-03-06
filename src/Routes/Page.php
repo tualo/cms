@@ -5,62 +5,49 @@ use Tualo\Office\Basic\Route;
 use Tualo\Office\Basic\IRoute;
 
 use Tualo\Office\PUG\PUGRenderingHelper;
-use Tualo\Office\CMS\CMSMiddlewareWMHelper;
+use Tualo\Office\CMS\CMSMiddlewareHelper;
 use Tualo\Office\CMS\CMSRenderingHelper;
 
 class Page implements IRoute{
+    private static $middlWareSQL = '
+        select 
+            page_content.id,
+            page_content_middlewares.middleware
+        from 
+            page_content_middlewares 
+            join page_content on 
+            page_content_middlewares.page_content_id = page_content.id
+        where 
+            page_content.id = {path}
+        order by 
+            position
+    ';
 
     public static function cmsMiddleware($db,$path){
-        CMSMiddlewareWMHelper::$db=$db;
+        CMSMiddlewareHelper::$db=$db;
+        $cmsmiddlewares = $db->directArray(self::$middlWareSQL,[ 'path'=> $path ],'middleware');
 
-        $cmsmiddlewares = $db->direct('
-            select 
-                page_content.id,
-                page_content_middlewares.middleware
-            from 
-                page_content_middlewares 
-                join page_content on 
-                page_content_middlewares.page_content_id = page_content.id
-            where 
-                page_content.id = {path}
-            order by 
-                position
-        ',array('path'=> $path ));
-
+        $cmsmiddlewares[]='Tualo\Office\OnlineVote\CMSMiddleware\Init';
         $request = [];
         $result = [];
         $request['session'] = json_decode(json_encode($_SESSION),true);
         $request['request'] = json_decode(json_encode($_REQUEST),true);
 
-
-        $classes = get_declared_classes();
-        
-        $aICmsMiddlewares=[];
-        foreach($classes as $cls){
-            $class = new \ReflectionClass($cls);
-            if ( $class->implementsInterface('Tualo\Office\CMS\ICmsMiddleware') ) {
-                $aICmsMiddlewares[$cls] = $cls;
-                $a=explode("\\",$cls);
-                $aICmsMiddlewares[array_pop($a)] = $cls;
-
-            }
-        }
-
-        $result['wm_state']='maintenance';
-        
         foreach($cmsmiddlewares as $cmsmiddleware){
-            if (
-                isset($aICmsMiddlewares[$cmsmiddleware['middleware']])
-            ){
-                $aICmsMiddlewares[$cmsmiddleware['middleware']]::run($request,$result);
-            }else{
-                TualoApplication::logger('CMS('.__FILE__.')')->error("cannot get ".$cmsmiddleware['middleware']);
-                //throw new \Exception("cannot get ".$cmsmiddleware['middleware']);
+            try{
+                $class = new \ReflectionClass($cmsmiddleware);
+                if (!$class->hasMethod('run')){ 
+                    TualoApplication::logger('CMS')->error($cmsmiddleware.' has no run method'); 
+                }else{
+                    $cmsmiddleware::run($request,$result);
+                }
+            }catch(\Exception $e ){
+                TualoApplication::logger('CMS')->error($e->getMessage());
             }
         }
-
-        CMSMiddlewareWMHelper::$request=$request;
-        CMSMiddlewareWMHelper::$result=$result;
+        CMSMiddlewareHelper::$request=$request;
+        CMSMiddlewareHelper::$result=$result;
+        
     }
 
     public static function register(){
@@ -115,7 +102,7 @@ class Page implements IRoute{
                     PUGRenderingHelper::exportPUG($db);
 
                     $GLOBALS['pug_merge'] = [];
-                    $GLOBALS['pug_merge']['cms']=CMSMiddlewareWMHelper::$result;
+                    $GLOBALS['pug_merge']['cms']=CMSMiddlewareHelper::$result;
                     
                     $hash = md5( $template.$_REQUEST['id'] );
                     $html = PUGRenderingHelper::render( PUGRenderingHelper::getIDArray($matches,$_REQUEST) ,$template, $_REQUEST);
@@ -135,7 +122,7 @@ class Page implements IRoute{
 
 
             }catch(\Exception $e){
-                echo $e->getMessage();
+                TualoApplication::logger('CMS')->error($e->getMessage());
                 TualoApplication::result('msg', $e->getMessage());
             }
         },array('get','post'),true);

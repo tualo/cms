@@ -3,7 +3,7 @@ namespace Tualo\Office\CMS;
 use Tualo\Office\Basic\TualoApplication;
 use Tualo\Office\PUG\PUGRenderingHelper;
 
-class CMSMiddlewareWMHelper{
+class CMSMiddlewareHelper{
     public static $db = null;
     public static $request = [];
     public static $result = [];
