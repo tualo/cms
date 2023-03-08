@@ -6,7 +6,6 @@ use Tualo\Office\Basic\IRoute;
 
 use Tualo\Office\PUG\PUGRenderingHelper;
 use Tualo\Office\CMS\CMSMiddlewareHelper;
-use Tualo\Office\CMS\CMSRenderingHelper;
 
 class Page implements IRoute{
     private static $middlWareSQL = '
@@ -36,10 +35,12 @@ class Page implements IRoute{
         foreach($cmsmiddlewares as $cmsmiddleware){
             try{
                 $class = new \ReflectionClass($cmsmiddleware);
+                TualoApplication::timing("cmsMiddleware $cmsmiddleware");
                 if (!$class->hasMethod('run')){ 
                     TualoApplication::logger('CMS')->error($cmsmiddleware.' has no run method'); 
                 }else{
                     $cmsmiddleware::run($request,$result);
+                    TualoApplication::timing("cmsMiddleware $cmsmiddleware after run");
                 }
             }catch(\Exception $e ){
                 TualoApplication::logger('CMS')->error($e->getMessage());
@@ -52,16 +53,31 @@ class Page implements IRoute{
 
     public static function register(){
 
+        Route::add('/cms/page/(?P<path>.*).css',function($matches){
+            $db = TualoApplication::get('session')->getDB();
+            $session = TualoApplication::get('session');
+            try {
+                $data = $db->singleValue('select group_concat(css separator \'
+                \') css from view_readtable_ds_renderer_stylesheet_groups_assign where pug_id={path} and active=1 ',$matches,'css' );
+            TualoApplication::body( $data  );
+            }catch(Exception $e){
+                TualoApplication::body('/* '.$e->getMessage().' */');
+            }
+            TualoApplication::contenttype('text/css');
+            Route::$finished=true;
+
+        },array('get','post'),true);
 
         Route::add('/cms/page/(?P<path>.*)',function($matches){
 
             TualoApplication::timing("cms/page",'');
             $path = $matches['path'];
 
-
-
-            $db = TualoApplication::get('session')->getDB();
+            TualoApplication::timing("cms/page get db 1");
             $session = TualoApplication::get('session');
+            $db = $session->getDB();
+            TualoApplication::timing("cms/page get db 2");
+            
             try {
                 TualoApplication::timing("before cmsMiddleware",'');
                 self::cmsMiddleware($db,$path);
