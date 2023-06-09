@@ -8,7 +8,7 @@ use Tualo\Office\Basic\TualoApplication as App;
 use Tualo\Office\Basic\PostCheck;
 use Tualo\Office\DS\DataRenderer;
 
-class SetupApache implements ICommandline{
+class SetupCMSApache implements ICommandline{
 
     public static $template = <<<EOT
 RewriteEngine on
@@ -30,7 +30,7 @@ Header add Referrer-Policy "same-origin"
 EOT;
 
 
-    public static function getCommandName():string { return 'setupapache';}
+    public static function getCommandName():string { return 'setup-cms-apache';}
 
     public static function setup(Cli $cli){
         $cli->command(self::getCommandName())
