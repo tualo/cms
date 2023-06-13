@@ -115,7 +115,9 @@ class Page implements IRoute{
                     $GLOBALS['pug_cache']=TualoApplication::get("basePath").'/cache/'.$db->dbname.'/ds';
                     
                     TualoApplication::set("pugCachePath",$GLOBALS['pug_cache']);
+                    TualoApplication::timing("cache vars set",'');
                     PUGRenderingHelper::exportPUG($db);
+                    TualoApplication::timing("exportPUG",'');
 
                     $GLOBALS['pug_merge'] = [];
                     $GLOBALS['pug_merge']['cms']=CMSMiddlewareHelper::$result;
@@ -134,6 +136,8 @@ class Page implements IRoute{
                     }
 
     
+                }else{
+                    header("HTTP/1.0 405 Method Not Allowed");
                 }
 
 
