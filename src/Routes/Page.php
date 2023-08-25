@@ -60,12 +60,11 @@ class Page implements IRoute{
                 $data = $db->singleValue('select group_concat(css separator \'
                 \') css from view_readtable_ds_renderer_stylesheet_groups_assign where pug_id={path} and active=1 ',$matches,'css' );
             TualoApplication::body( $data  );
-            }catch(Exception $e){
+            }catch(\Exception $e){
                 TualoApplication::body('/* '.$e->getMessage().' */');
             }
             TualoApplication::contenttype('text/css');
             Route::$finished=true;
-
         },array('get','post'),true);
 
         Route::add('/cms/page/(?P<path>.*)',function($matches){
@@ -137,7 +136,7 @@ class Page implements IRoute{
 
     
                 }else{
-                    header("HTTP/1.0 404 not found");
+                    header($_SERVER['SERVER_PROTOCOL'] . " 404 not found");
                     exit();
                 }
 
