@@ -8,3 +8,6 @@ if (class_exists("Tualo\Office\CMS\Routes\Images")){ }
 
 // shorthand for old pug templates
 class DataRenderer extends Tualo\Office\DS\DataRenderer {  }
+
+require_once "Checks/Tables.php";
+require_once "InstallMainSQLCommandline.php";
