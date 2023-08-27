@@ -158,7 +158,7 @@ select
                         )
                         ORDER BY tualocms_section_tualocms_page.position
                 )
-        ) o
+        ) `page`
 from 
         tualocms_page 
         join tualocms_section_tualocms_page

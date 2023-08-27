@@ -3,8 +3,9 @@ namespace Tualo\Office\CMS\Routes;
 use Tualo\Office\Basic\TualoApplication;
 use Tualo\Office\Basic\Route;
 use Tualo\Office\Basic\IRoute;
+use Tualo\Office\DS\DSTable;
 
-use Tualo\Office\PUG\PUGRenderingHelper;
+use Tualo\Office\PUG\PUG;
 use Tualo\Office\CMS\CMSMiddlewareHelper;
 
 class Page implements IRoute{
@@ -21,6 +22,8 @@ class Page implements IRoute{
         order by 
             position
     ';
+
+    
 
     public static function cmsMiddleware($db,$path){
         CMSMiddlewareHelper::$db=$db;
@@ -52,7 +55,7 @@ class Page implements IRoute{
     }
 
     public static function register(){
-
+        /*
         Route::add('/cms/page/(?P<path>.*).css',function($matches){
             $db = TualoApplication::get('session')->getDB();
             $session = TualoApplication::get('session');
@@ -61,11 +64,61 @@ class Page implements IRoute{
                 \') css from view_readtable_ds_renderer_stylesheet_groups_assign where pug_id={path} and active=1 ',$matches,'css' );
             TualoApplication::body( $data  );
             }catch(\Exception $e){
-                TualoApplication::body('/* '.$e->getMessage().' */');
+                TualoApplication::body('/'.'* '.$e->getMessage().' *'.'/');
             }
             TualoApplication::contenttype('text/css');
             Route::$finished=true;
         },array('get','post'),true);
+        */
+        Route::add('/tualocms/page/(?P<path>.*)',function($matches){
+            $session = TualoApplication::get('session');
+            $db = $session->getDB();
+            
+            try {
+
+                $matches['path']='/'.$matches['path'];
+
+                $table = (new DSTable($db,'view_load_tualocms_page'))->filter(
+                    'path',
+                    '=',
+                    $matches['path']
+                );
+                $table->limit(1);
+                $table->read();
+
+                if (!$table->empty()){
+                    $data = $table->getSingle();
+                    TualoApplication::set("pugCachePath", TualoApplication::get("basePath").'/cache/'.$db->dbname.'/cache' );
+                    Route::$finished = true;
+                    $template=$data['pug_file'];
+                    PUG::exportPUG($db);
+                    if (!isset($data['page'])) throw new \Exception('attribute page not found');
+                    $data['page']=json_decode($data['page'],true);
+                    $html = PUG::render( 
+                        $template,
+                        $data
+                    );
+                    TualoApplication::body( $html );
+                    TualoApplication::contenttype('text/html');
+                    http_response_code(200);
+
+                }else{
+                    Route::pathNotFound(function ($path){
+                        TualoApplication::body( "Not found ** $path" );
+                        TualoApplication::contenttype('text/html');
+                        http_response_code(404);
+                    });
+                    exit();
+
+                }
+            }catch(\Exception $e){
+                echo $db->last_sql."\n";
+                echo $e->getMessage();
+                TualoApplication::logger('CMS')->error($e->getMessage());
+                TualoApplication::result('msg', $e->getMessage());
+            }
+
+        },['get','post'],true);
 
         Route::add('/cms/page/(?P<path>.*)',function($matches){
 
