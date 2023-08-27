@@ -6,6 +6,8 @@ use Tualo\Office\Basic\IRoute;
 use Tualo\Office\DS\DSTable;
 
 use Tualo\Office\PUG\PUG;
+use Tualo\Office\PUG\PUGRenderingHelper;
+
 use Tualo\Office\CMS\CMSMiddlewareHelper;
 
 class Page implements IRoute{
@@ -85,7 +87,6 @@ class Page implements IRoute{
                 );
                 $table->limit(1);
                 $table->read();
-
                 if (!$table->empty()){
                     $data = $table->getSingle();
                     TualoApplication::set("pugCachePath", TualoApplication::get("basePath").'/cache/'.$db->dbname.'/cache' );
@@ -108,11 +109,9 @@ class Page implements IRoute{
                         TualoApplication::contenttype('text/html');
                         http_response_code(404);
                     });
-                    exit();
 
                 }
             }catch(\Exception $e){
-                echo $db->last_sql."\n";
                 echo $e->getMessage();
                 TualoApplication::logger('CMS')->error($e->getMessage());
                 TualoApplication::result('msg', $e->getMessage());
