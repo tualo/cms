@@ -1,14 +1,12 @@
 <?php
 
-if (class_exists("Tualo\Office\CMS\Middlewares\Middleware")){ }
-if (class_exists("Tualo\Office\CMS\Routes\Route")){ }
-if (class_exists("Tualo\Office\CMS\Routes\Page")){ }
-if (class_exists("Tualo\Office\CMS\Routes\Stylesheet")){ }
-if (class_exists("Tualo\Office\CMS\Routes\Images")){ }
-
+require_once "CMSMiddleware/Session.php";
 require_once "SetupCMSApache.php";
-// shorthand for old pug templates
-class DataRenderer extends Tualo\Office\DS\DataRenderer {  }
-
 require_once "Checks/Tables.php";
+require_once "Routes/Page.php";
+require_once "Routes/OldPage.php";
+require_once "Routes/Images.php";
+require_once "Routes/Stylesheet.php";
+require_once "Routes/Route.php";
+require_once "Middlewares/Middleware.php";
 require_once "InstallMainSQLCommandline.php";

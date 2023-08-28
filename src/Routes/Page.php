@@ -13,28 +13,27 @@ use Tualo\Office\CMS\CMSMiddlewareHelper;
 class Page implements IRoute{
     private static $middlWareSQL = '
         select 
-            page_content.id,
-            page_content_middlewares.middleware
+            tualocms_page.path,
+            tualocms_page_middleware.tualocms_middleware
         from 
-            page_content_middlewares 
-            join page_content on 
-            page_content_middlewares.page_content_id = page_content.id
+            tualocms_page_middleware 
+            join tualocms_page 
+                on tualocms_page_middleware.tualocms_page = tualocms_page.tualocms_page
         where 
-            page_content.id = {path}
+            tualocms_page.path = {path}
         order by 
-            position
+            tualocms_page_middleware.position
     ';
 
     
 
-    public static function cmsMiddleware($db,$path){
+    public static function middlewares($db,$path){
         CMSMiddlewareHelper::$db=$db;
-        $cmsmiddlewares = $db->directArray(self::$middlWareSQL,[ 'path'=> $path ],'middleware');
-
-        $cmsmiddlewares[]='Tualo\Office\OnlineVote\CMSMiddleware\Init';
+        $cmsmiddlewares = $db->directArray(self::$middlWareSQL,[ 'path'=> $path ],'tualocms_middleware');
+        
         $request = [];
         $result = [];
-        $request['session'] = json_decode(json_encode($_SESSION),true);
+        // $request['session'] = json_decode(json_encode($_SESSION),true);
         $request['request'] = json_decode(json_encode($_REQUEST),true);
 
         foreach($cmsmiddlewares as $cmsmiddleware){
@@ -57,29 +56,13 @@ class Page implements IRoute{
     }
 
     public static function register(){
-        /*
-        Route::add('/cms/page/(?P<path>.*).css',function($matches){
-            $db = TualoApplication::get('session')->getDB();
-            $session = TualoApplication::get('session');
-            try {
-                $data = $db->singleValue('select group_concat(css separator \'
-                \') css from view_readtable_ds_renderer_stylesheet_groups_assign where pug_id={path} and active=1 ',$matches,'css' );
-            TualoApplication::body( $data  );
-            }catch(\Exception $e){
-                TualoApplication::body('/'.'* '.$e->getMessage().' *'.'/');
-            }
-            TualoApplication::contenttype('text/css');
-            Route::$finished=true;
-        },array('get','post'),true);
-        */
+        
         Route::add('/tualocms/page/(?P<path>.*)',function($matches){
             $session = TualoApplication::get('session');
             $db = $session->getDB();
             
             try {
-
                 $matches['path']='/'.$matches['path'];
-
                 $table = (new DSTable($db,'view_load_tualocms_page'))->filter(
                     'path',
                     '=',
@@ -95,6 +78,8 @@ class Page implements IRoute{
                     PUG::exportPUG($db);
                     if (!isset($data['page'])) throw new \Exception('attribute page not found');
                     $data['page']=json_decode($data['page'],true);
+                    self::middlewares($db,$matches['path']);
+                    $data['cms']=CMSMiddlewareHelper::$result;
                     $html = PUG::render( 
                         $template,
                         $data
@@ -118,87 +103,6 @@ class Page implements IRoute{
             }
 
         },['get','post'],true);
-
-        Route::add('/cms/page/(?P<path>.*)',function($matches){
-
-            TualoApplication::timing("cms/page",'');
-            $path = $matches['path'];
-
-            TualoApplication::timing("cms/page get db 1");
-            $session = TualoApplication::get('session');
-            $db = $session->getDB();
-            TualoApplication::timing("cms/page get db 2");
-            
-            try {
-                TualoApplication::timing("before cmsMiddleware",'');
-                self::cmsMiddleware($db,$path);
-                TualoApplication::timing("after cmsMiddleware",'');
-
-                $data = $db->singleRow('select pug_file,page_title,page_content from page_content where id={path}',array('path'=>$path));
-                TualoApplication::timing("select page_content",'');
-                if ($data){
-
-
-                    $template=$data['pug_file'];
-
-                    $_REQUEST['tablename']='page_content';
-                    $_REQUEST['id'] = $path;
-
-
-                    if (!file_exists(TualoApplication::get("basePath").'/cache/'.$db->dbname)){
-                        mkdir(TualoApplication::get("basePath").'/cache/'.$db->dbname);
-                    }
-                    if (!file_exists(TualoApplication::get("basePath").'/cache/'.$db->dbname.'/ds')){
-                        mkdir(TualoApplication::get("basePath").'/cache/'.$db->dbname.'/ds');
-                    }
-                    if (!file_exists(TualoApplication::get("basePath").'/cache/'.$db->dbname.'/cache')){
-                        mkdir(TualoApplication::get("basePath").'/cache/'.$db->dbname.'/cache');
-                    }
-                    if (!file_exists(TualoApplication::get("basePath").'/cache/'.$db->dbname.'/readcache')){
-                        mkdir(TualoApplication::get("basePath").'/cache/'.$db->dbname.'/readcache');
-                    }
-                    TualoApplication::set("pugCachePath", TualoApplication::get("basePath").'/cache/'.$db->dbname.'/cache' );
-
-
-
-                    set_time_limit(300);
-                    $_REQUEST['pug_cache']=TualoApplication::get("basePath").'/cache/'.$db->dbname.'/ds';
-                    $GLOBALS['pug_cache']=TualoApplication::get("basePath").'/cache/'.$db->dbname.'/ds';
-                    
-                    TualoApplication::set("pugCachePath",$GLOBALS['pug_cache']);
-                    TualoApplication::timing("cache vars set",'');
-                    PUGRenderingHelper::exportPUG($db);
-                    TualoApplication::timing("exportPUG",'');
-
-                    $GLOBALS['pug_merge'] = [];
-                    $GLOBALS['pug_merge']['cms']=CMSMiddlewareHelper::$result;
-                    
-                    $hash = md5( $template.$_REQUEST['id'] );
-                    $html = PUGRenderingHelper::render( PUGRenderingHelper::getIDArray($matches,$_REQUEST) ,$template, $_REQUEST);
-                    file_put_contents(TualoApplication::get("basePath").'/cache/'.$db->dbname.'/readcache/'.$hash,$html);
-
-
-                    Route::$finished = true;
-                    TualoApplication::body( $html );
-                    TualoApplication::contenttype('text/html');
-
-                    if (isset( $_SESSION['session_error'] )){
-                        unset($_SESSION['session_error']);
-                    }
-
-    
-                }else{
-                    header($_SERVER['SERVER_PROTOCOL'] . " 404 not found");
-                    exit();
-                }
-
-
-            }catch(\Exception $e){
-                TualoApplication::logger('CMS')->error($e->getMessage());
-                TualoApplication::result('msg', $e->getMessage());
-            }
-        },array('get','post'),true);
-
 
 
     }
