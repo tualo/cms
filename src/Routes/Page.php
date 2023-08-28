@@ -75,6 +75,14 @@ class Page implements IRoute{
                     TualoApplication::set("pugCachePath", TualoApplication::get("basePath").'/cache/'.$db->dbname.'/cache' );
                     Route::$finished = true;
                     $template=$data['pug_file'];
+
+
+                    $css = (new DSTable($db,'ds_renderer_stylesheet_groups_assign'))
+                        ->filter( 'active', '=', 1)
+                        ->filter( 'pug_id', '=', $template)
+                        ->read();
+                    $data['stylesheets'] = $css->get();
+
                     PUG::exportPUG($db);
                     if (!isset($data['page'])) throw new \Exception('attribute page not found');
                     $data['page']=json_decode($data['page'],true);
