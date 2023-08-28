@@ -57,6 +57,32 @@ class Page implements IRoute{
 
     public static function register(){
         
+        Route::add('/tualocms/page/public/(?P<path>.*)',function($matches){
+            
+                
+                $publicpath =  TualoApplication::configuration(
+                    'tualo-cms',
+                    'public_path'
+                );
+                if ($publicpath!==false){
+                    if (file_exists(
+                        str_replace('//','/',implode('/',[
+                            $publicpath,
+                            $matches['path']
+                        ])
+                    ))){
+                        TualoApplication::etagFile( str_replace('//','/',implode('/',[
+                            $publicpath,
+                            $matches['path']
+                        ])) , true);
+                        Route::$finished = true;
+                        http_response_code(200);
+                    }
+                }
+
+            
+        },['get','post'],true);
+
         Route::add('/tualocms/page/(?P<path>.*)',function($matches){
             $session = TualoApplication::get('session');
             $db = $session->getDB();
