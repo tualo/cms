@@ -148,7 +148,7 @@ select
                 'title', tualocms_page.title,
                 'content', tualocms_page.content,
                 'template',tualocms_page.pug_file,
-                'sections', JSON_ARRAYAGG(
+                'sections', ifnull(JSON_ARRAYAGG(
                         JSON_OBJECT(
                                 'id', tualocms_section.tualocms_section,
                                 'title',tualocms_section.title,
@@ -156,11 +156,11 @@ select
                                 'template',tualocms_section.pug_file
                         )
                         ORDER BY tualocms_section_tualocms_page.position
-                )
+                ),json_array())
         ) `page`
 from 
         tualocms_page 
-        join tualocms_section_tualocms_page
+        left join tualocms_section_tualocms_page
                 on tualocms_section_tualocms_page.tualocms_page=tualocms_page.tualocms_page
                 and (
                         now() between tualocms_page.valid_from and tualocms_page.valid_until
@@ -170,7 +170,7 @@ from
                         now() between tualocms_section_tualocms_page.valid_from and tualocms_section_tualocms_page.valid_until
                 )
                 
-        join tualocms_section 
+        left join tualocms_section 
                 on tualocms_section.tualocms_section=tualocms_section_tualocms_page.tualocms_section
                 
                 and (
