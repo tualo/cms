@@ -6,8 +6,9 @@ use Parsedown;
 
 class Markdown {
     public static function markdownfn():mixed{
-        return function(string $markdownText):string{
+        return function(string|null $markdownText):string{
             $Parsedown = new Parsedown();
+            if(is_null($markdownText))  return ''; 
             $result = $Parsedown->text($markdownText);
             if (strpos($result,"<p>")===0) $result = substr( $result ,3,-4);
             return $result;
