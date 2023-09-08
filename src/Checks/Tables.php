@@ -9,7 +9,8 @@ use Tualo\Office\Basic\TualoApplication as App;
 class Tables  extends PostCheck {
     
     public static function test(array $config){
-        // print_r($config);
+        $clientdb = App::get('clientDB');
+        if (is_null($clientdb)) return;
         $tables = [
             'page_content'=>[
                 'columns'=>[
@@ -17,6 +18,10 @@ class Tables  extends PostCheck {
                 ]
             ]
         ];
-        self::tableCheck('cms',$tables);
+        self::tableCheck(
+            'cms',$tables,
+        "please run the following command: `./tm install-sql-cms --client ".$clientdb->dbname."`",
+        "please run the following command: `./tm install-sql-cms --client ".$clientdb->dbname."`"
+        );
     }
 }
