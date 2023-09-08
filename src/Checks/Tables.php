@@ -12,7 +12,7 @@ class Tables  extends PostCheck {
         $clientdb = App::get('clientDB');
         if (is_null($clientdb)) return;
         $tables = [
-            'page_content'=>[
+            'tualocms_page'=>[
                 'columns'=>[
                     'table_name'=>'varchar(128)'
                 ]
@@ -20,8 +20,8 @@ class Tables  extends PostCheck {
         ];
         self::tableCheck(
             'cms',$tables,
-        "please run the following command: `./tm install-sql-cms --client ".$clientdb->dbname."`",
-        "please run the following command: `./tm install-sql-cms --client ".$clientdb->dbname."`"
+            "please run the following command: `./tm install-sql-cms --client ".$clientdb->dbname."`",
+            "please run the following command: `./tm install-sql-cms --client ".$clientdb->dbname."`"
         );
     }
 }
