@@ -1,5 +1,5 @@
 <?php
-namespace Tualo\Office\CMS;
+namespace Tualo\Office\CMS\Commands;
 use Garden\Cli\Cli;
 use Garden\Cli\Args;
 use phpseclib3\Math\BigInteger\Engines\PHP;
@@ -10,17 +10,16 @@ use Tualo\Office\Basic\PostCheck;
 
 class InstallMainSQLCommandline implements ICommandline{
 
-    public static function getCommandName():string { return 'install-sql-cms';}
+    public static function getCommandName():string { return 'install-sql-papervote';}
 
     public static function setup(Cli $cli){
         $cli->command(self::getCommandName())
-            ->description('installs needed sql procedures for cms module')
+            ->description('installs needed sql procedures for papervote module')
             ->opt('client', 'only use this client', true, 'string');
             
     }
 
    
-    
     public static function setupClients(string $msg,string $clientName,string $file,callable $callback){
         $_SERVER['REQUEST_URI']='';
         $_SERVER['REQUEST_METHOD']='none';
@@ -41,10 +40,6 @@ class InstallMainSQLCommandline implements ICommandline{
             }
         }
     }
-
-
-
-    
 
     public static function run(Args $args){
 
@@ -78,16 +73,19 @@ class InstallMainSQLCommandline implements ICommandline{
             'install/tualocms_section_tualocms_page'    => 'setup tualocms_section_tualocms_page',
             'install/tualocms_section_tualocms_page.ds' => 'setup tualocms_section_tualocms_page.ds',
 
+
+
         ];
-    
+
+
         foreach($files as $file=>$msg){
             $installSQL = function(string $file){
-    
-                $filename = __DIR__.'/sql/'.$file.'.sql';
+
+                $filename = dirname(__DIR__).'/sql/install/'.$file.'.sql';
                 $sql = file_get_contents($filename);
                 $sql = preg_replace('!/\*.*?\*/!s', '', $sql);
                 $sql = preg_replace('#^\s*\-\-.+$#m', '', $sql);
-    
+
                 $sinlgeStatements = App::get('clientDB')->explode_by_delimiter($sql);
                 foreach($sinlgeStatements as $commandIndex => $statement){
                     try{
@@ -103,5 +101,7 @@ class InstallMainSQLCommandline implements ICommandline{
             if( is_null($clientName) ) $clientName = '';
             self::setupClients($msg,$clientName,$file,$installSQL);
         }
+
+
     }
 }

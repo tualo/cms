@@ -10,4 +10,5 @@ require_once "Routes/Images.php";
 require_once "Routes/Stylesheet.php";
 require_once "Routes/Route.php";
 require_once "Middlewares/Middleware.php";
-require_once "InstallMainSQLCommandline.php";
+require_once "Commands/InstallMainSQLCommandline.php";
+require_once "Commands/InstallMenuSQLCommandline.php";
