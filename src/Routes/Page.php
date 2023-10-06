@@ -57,6 +57,22 @@ class Page implements IRoute{
 
     public static function register(){
         
+
+        Route::add('/cms/page/(?P<path>.*).css',function($matches){
+            $db = TualoApplication::get('session')->getDB();
+            $session = TualoApplication::get('session');
+            try {
+                $data = $db->singleValue('select group_concat(css separator \'
+                \') css from view_readtable_ds_renderer_stylesheet_groups_assign where pug_id={path} and active=1 ',$matches,'css' );
+            TualoApplication::body( $data  );
+            }catch(\Exception $e){
+                TualoApplication::body('/* '.$e->getMessage().' */');
+            }
+            TualoApplication::contenttype('text/css');
+            Route::$finished=true;
+
+        },array('get','post'),true);
+
         Route::add('/tualocms/page/public/(?P<path>.*)',function($matches){
             
                 
