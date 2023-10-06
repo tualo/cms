@@ -58,7 +58,7 @@ class Page implements IRoute{
     public static function register(){
         
 
-        Route::add('/cms/page/(?P<path>.*).css',function($matches){
+        Route::add('/tualocms/page/(?P<path>.*).css',function($matches){
             $db = TualoApplication::get('session')->getDB();
             $session = TualoApplication::get('session');
             try {
