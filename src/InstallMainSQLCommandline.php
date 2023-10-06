@@ -51,7 +51,33 @@ class InstallMainSQLCommandline implements ICommandline{
         $files = [
             'ddl-cms' => 'setup main ddl ',
             'middlewares' => 'setup cms middlewares ',
-            'ds.definition' => 'setup cms ds definition '
+            'ds.definition' => 'setup cms ds definition ',
+
+            'ds_class'=> 'setup ds_class',
+
+            'tualocms_attribute' => 'setup tualocms_attribute',
+            'tualocms_attribute.ds' => 'setup tualocms_attribute.ds',
+
+            'tualocms_middleware' => 'setup tualocms_middleware',
+            'tualocms_middleware.ds' => 'setup tualocms_middleware.ds',
+            
+
+            'tualocms_page' => 'setup tualocms_page',
+            'tualocms_page.ds' => 'setup tualocms_page.ds',
+
+
+            'tualocms_page_middleware' => 'setup tualocms_page_middleware',
+            'tualocms_page_middleware.ds' => 'setup tualocms_page_middleware.ds',
+
+            'tualocms_section' => 'setup tualocms_section',
+            'tualocms_section.ds' => 'setup tualocms_section.ds',
+
+            'tualocms_section_tualocms_attributes' => 'setup tualocms_section_tualocms_attributes',
+            'tualocms_section_tualocms_attributes.ds' => 'setup tualocms_section_tualocms_attributes.ds',
+
+            'tualocms_section_tualocms_page'    => 'setup tualocms_section_tualocms_page',
+            'tualocms_section_tualocms_page.ds' => 'setup tualocms_section_tualocms_page.ds',
+
         ];
     
         foreach($files as $file=>$msg){
