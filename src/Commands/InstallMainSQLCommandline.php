@@ -10,7 +10,7 @@ use Tualo\Office\Basic\PostCheck;
 
 class InstallMainSQLCommandline implements ICommandline{
 
-    public static function getCommandName():string { return 'install-sql-papervote';}
+    public static function getCommandName():string { return 'install-sql-cms';}
 
     public static function setup(Cli $cli){
         $cli->command(self::getCommandName())
