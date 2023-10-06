@@ -81,7 +81,7 @@ class InstallMainSQLCommandline implements ICommandline{
         foreach($files as $file=>$msg){
             $installSQL = function(string $file){
 
-                $filename = dirname(__DIR__).'/sql/install/'.$file.'.sql';
+                $filename = dirname(__DIR__).'/sql/'.$file.'.sql';
                 $sql = file_get_contents($filename);
                 $sql = preg_replace('!/\*.*?\*/!s', '', $sql);
                 $sql = preg_replace('#^\s*\-\-.+$#m', '', $sql);
