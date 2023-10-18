@@ -19,6 +19,7 @@
     "require": {
         "tualo/ds": "*",
         "erusev/parsedown": "*",
-        "tualo/pug": "*"
+        "tualo/pug": "*",
+        "tualo/cherry-markdown": "*"
     }
 }
