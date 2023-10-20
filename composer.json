@@ -20,6 +20,7 @@
         "tualo/ds": "*",
         "erusev/parsedown": "*",
         "tualo/pug": "*",
-        "tualo/cherry-markdown": "*"
+        "tualo/cherry-markdown": "*",
+        "michelf/php-markdown": "*"
     }
 }
