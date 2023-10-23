@@ -137,6 +137,33 @@ CREATE OR REPLACE TABLE `tualocms_section_tualocms_page` (
 
 );
 
+CREATE or replace view view_load_tualocms_page_section_attributes as
+select
+        tualocms_section,
+        ifnull(
+                JSON_ARRAYAGG(
+                        JSON_OBJECT(
+                                'id',
+                                tualocms_attribute.tualocms_attribute,
+                                'name',
+                                tualocms_attribute.name
+                        )
+                ),
+                json_array()
+        ) js,
+        ifnull(
+                JSON_ARRAYAGG(
+                        tualocms_attribute.name
+                ),
+                json_array()
+        ) js_shortnames
+from
+        tualocms_section_tualocms_attributes
+        join tualocms_attribute on tualocms_attribute.tualocms_attribute = tualocms_section_tualocms_attributes.tualocms_attribute
+group by
+        tualocms_section
+;
+
 CREATE or replace view view_load_tualocms_page as 
 select 
         tualocms_page.tualocms_page,
@@ -153,10 +180,13 @@ select
                                 'id', tualocms_section.tualocms_section,
                                 'title',tualocms_section.title,
                                 'content',tualocms_section.content,
-                                'template',tualocms_section.pug_file
+                                'template',tualocms_section.pug_file,
+                                'attributes',ifnull(view_load_tualocms_page_section_attributes.js,json_array()),
+                                'attributes_short',ifnull(view_load_tualocms_page_section_attributes.js_shortnames,json_array())
                         )
                         ORDER BY tualocms_section_tualocms_page.position
                 ),json_array())
+
         ) `page`
 from 
         tualocms_page 
@@ -176,7 +206,12 @@ from
                 and (
                         now() between tualocms_section.valid_from and tualocms_section.valid_until
                 )
+
+        left join view_load_tualocms_page_section_attributes
+                on view_load_tualocms_page_section_attributes.tualocms_section=tualocms_section.tualocms_section
+             
                 
+                 
                 
 
 group by
