@@ -1368,7 +1368,7 @@ VALUES
         'ctime',
         'DE',
         'Anlage',
-        'tualodisplaydatefield',
+        'tualodatetimedisplayfield',
         'Allgemein/Angaben',
         4,
         0,
