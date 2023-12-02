@@ -7,6 +7,7 @@ require_once "Checks/Tables.php";
 require_once "Routes/Page.php";
 require_once "Routes/OldPage.php";
 require_once "Routes/Images.php";
+require_once "Routes/Image.php";
 require_once "Routes/Stylesheet.php";
 require_once "Routes/Route.php";
 require_once "Middlewares/Middleware.php";
