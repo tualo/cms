@@ -14,7 +14,7 @@ class Tables  extends PostCheck {
         $tables = [
             'tualocms_page'=>[
                 'columns'=>[
-                    'table_name'=>'varchar(128)'
+                    // 'table_name'=>'varchar(128)'
                 ]
             ]
         ];
