@@ -147,7 +147,7 @@ class Page implements IRoute
                     http_response_code(200);
                 } else {
                     Route::pathNotFound(function ($path) {
-                        TualoApplication::body("Not found ** $path");
+                        TualoApplication::body("Not found");
                         TualoApplication::contenttype('text/html');
                         http_response_code(404);
                     });
