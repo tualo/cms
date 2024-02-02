@@ -85,7 +85,11 @@ class InstallMainSQLCommandline implements ICommandline{
             'install/tualocms_bilder.ds'=> 'setup tualocms_bilder.ds',
 
 
+            'install/tualocms_dateien_typen'=> 'setup tualocms_dateien_typen',
+            'install/tualocms_dateien_typen.ds'=> 'setup tualocms_dateien_typen.ds',
 
+            'install/tualocms_dateien'=> 'setup tualocms_dateien',
+            'install/tualocms_dateien.ds'=> 'setup tualocms_dateien.ds',
         ];
 
 
