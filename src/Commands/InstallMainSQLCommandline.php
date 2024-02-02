@@ -14,7 +14,7 @@ class InstallMainSQLCommandline implements ICommandline{
 
     public static function setup(Cli $cli){
         $cli->command(self::getCommandName())
-            ->description('installs needed sql procedures for papervote module')
+            ->description('installs needed sql procedures for cms module')
             ->opt('client', 'only use this client', true, 'string');
             
     }
