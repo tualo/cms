@@ -14,6 +14,12 @@ class Session {
         return $this;
     }
 
+    public function delete($key):Session { 
+        @session_start();
+        if (isset($_SESSION[$key])) unset($_SESSION[$key]); 
+        return $this;
+    }
+
     public static function run(&$request,&$result){
         $result['session']= new Session() ;
     }
