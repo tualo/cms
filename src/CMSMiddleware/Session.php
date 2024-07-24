@@ -7,7 +7,7 @@ class Session {
     public function get($key,$default=false):mixed { 
         return isset($_SESSION[$key])?$_SESSION[$key]:$default; 
     }
-    public function has($key):boolean { 
+    public function has($key):bool { 
         return isset($_SESSION[$key]);
     }
     public function set($key,$value):Session { 
