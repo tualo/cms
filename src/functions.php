@@ -14,3 +14,4 @@ require_once "Routes/Route.php";
 require_once "Middlewares/Middleware.php";
 require_once "Commands/InstallMainSQLCommandline.php";
 require_once "Commands/InstallMenuSQLCommandline.php";
+require_once "Commands/RegisterClient.php";
