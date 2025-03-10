@@ -71,8 +71,9 @@ class RegisterClient implements ICommandline
             if (!isset($_SESSION['tualoapplication']['username'])) $_SESSION['tualoapplication']['username'] = $user;
             if (!isset($_SESSION['tualoapplication']['client'])) $_SESSION['tualoapplication']['client'] = $clientName;
 
-            $token = $session->registerOAuth($params = ['cmp' => 'cmp_ds'], $force = true, $anyclient = false, $path = 'tualocms/page/*');
-            $session->oauthValidDays($token, 365);
+            $defaultDays = App::configuration('cms', 'oauth_days', 365);
+            $token = $session->registerOAuth($force = false, $anyclient = false, $path = 'tualocms/page/*', $name = 'CMS (Public)', $device = gethostname());
+            $session->oauthValidDays($token, $defaultDays);
             echo $token . PHP_EOL;
         } catch (\Exception $e) {
             echo $e->getMessage();

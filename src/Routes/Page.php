@@ -76,7 +76,6 @@ class Page implements IRoute
             } catch (\Exception $e) {
                 TualoApplication::body('/* ' . $e->getMessage() . ' */');
             }
-
         }, array('get', 'post'), true);
 
         Route::add('/tualocms/page/public/(?P<path>.*)', function ($matches) {
@@ -108,6 +107,8 @@ class Page implements IRoute
         }, ['get', 'post'], true);
 
         Route::add('/tualocms/page/(?P<path>.*)', function ($matches) {
+
+
             $session = TualoApplication::get('session');
             $db = $session->getDB();
 
@@ -121,6 +122,7 @@ class Page implements IRoute
                 $table->limit(1);
                 $table->read();
                 if (!$table->empty()) {
+
                     $data = $table->getSingle();
                     TualoApplication::set("pugCachePath", TualoApplication::get("basePath") . '/cache/' . $db->dbname . '/cache');
                     Route::$finished = true;
@@ -146,11 +148,16 @@ class Page implements IRoute
                     TualoApplication::contenttype('text/html');
                     http_response_code(200);
                 } else {
+
                     Route::pathNotFound(function ($path) {
-                        TualoApplication::body("Not found");
+
+
+                        TualoApplication::body("Not found " . getenv('image'));
                         TualoApplication::contenttype('text/html');
                         http_response_code(404);
                     });
+
+                    return true;
                 }
             } catch (\Exception $e) {
                 echo $e->getMessage();
