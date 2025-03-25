@@ -28,6 +28,8 @@ select
                     `tualocms_section`.`content`,
                     'template',
                     `tualocms_section`.`pug_file`,
+                    'anchor',
+                    `tualocms_section`.`anchor`,
                     'attributes',
                     ifnull(
                         `view_load_tualocms_page_section_attributes`.`js`,

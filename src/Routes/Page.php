@@ -81,6 +81,7 @@ class Page implements IRoute
         Route::add('/tualocms/page/public/(?P<path>.*)', function ($matches) {
 
 
+
             $publicpath =  TualoApplication::configuration(
                 'tualo-cms',
                 'public_path'
@@ -148,6 +149,18 @@ class Page implements IRoute
                     TualoApplication::contenttype('text/html');
                     http_response_code(200);
                 } else {
+
+                    if (strpos($matches['path'], '/img/') === 0) {
+                        return false;
+                    }
+
+                    if (strpos($matches['path'], '/assets/') === 0) {
+                        return false;
+                    }
+
+                    if (strpos($matches['path'], '/public/') === 0) {
+                        return false;
+                    }
 
                     Route::pathNotFound(function ($path) {
 

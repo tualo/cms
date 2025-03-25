@@ -10,3 +10,5 @@ CREATE TABLE IF NOT EXISTS `tualocms_section` (
   KEY `idx_tualocms_section_pug_file` (`pug_file`),
   CONSTRAINT `fk_tualocms_section_pug_file` FOREIGN KEY (`pug_file`) REFERENCES `ds_pug_templates` (`id`) ON UPDATE CASCADE
 );
+
+alter table `tualocms_section` add column if not exists `anchor` varchar(255) not null default '';
