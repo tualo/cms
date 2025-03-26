@@ -14,6 +14,43 @@ use Tualo\Office\CMS\CMSMiddlewareHelper;
 
 class Page implements IRoute
 {
+
+    public static function datetime(): callable
+    {
+        return function (string $dt): \DateTime {
+            return (new \DateTime($dt));
+        };
+    }
+
+
+    public static function base64file(): callable
+    {
+        return function (string $tablename, string $value, string $field = '__filename'): string {
+            return \Tualo\Office\DS\DSFiles::instance($tablename)->getBase64($field, $value, true);
+        };
+    }
+
+    public static function dstable(): callable
+    {
+        return function ($tn): \Tualo\Office\DS\DSTable {
+            return \Tualo\Office\DS\DSTable::instance($tn);
+        };
+    }
+
+    public static function keysort(): callable
+    {
+        return function (array $data, string $key, string $direction = 'asc'): array {
+            usort($data, function ($a, $b) use ($key, $direction) {
+                if ($direction == 'asc') {
+                    return $a[$key] <=> $b[$key];
+                } else {
+                    return $b[$key] <=> $a[$key];
+                }
+            });
+            return $data;
+        };
+    }
+
     private static $middlWareSQL = '
         select 
             tualocms_page.path,
@@ -140,6 +177,15 @@ class Page implements IRoute
                     if (!isset($data['page'])) throw new \Exception('attribute page not found');
                     $data['page'] = json_decode($data['page'], true);
                     self::middlewares($db, $matches['path']);
+
+                    $data = array_merge(
+                        [
+                            'datetime' => self::datetime(),
+                            'base64file' => self::base64file(),
+                            'dstable' => self::dstable(),
+                            'keysort' => self::keysort()
+                        ]
+                    );
                     $data['cms'] = CMSMiddlewareHelper::$result;
                     $html = PUG::render(
                         $template,
