@@ -197,6 +197,8 @@ class Page implements IRoute
                     http_response_code(200);
                 } else {
 
+
+                    /*
                     if (strpos($matches['path'], '/img/') === 0) {
                         return false;
                     }
@@ -207,17 +209,15 @@ class Page implements IRoute
 
                     if (strpos($matches['path'], '/public/') === 0) {
                         return false;
-                    }
+                    }*/
 
                     Route::pathNotFound(function ($path) {
-
-
-                        TualoApplication::body("Not found " . getenv('image'));
+                        TualoApplication::body("Not found ");
                         TualoApplication::contenttype('text/html');
                         http_response_code(404);
                     });
 
-                    return true;
+                    return false;
                 }
             } catch (\Exception $e) {
                 echo $e->getMessage();
