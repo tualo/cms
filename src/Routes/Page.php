@@ -179,6 +179,7 @@ class Page implements IRoute
                     self::middlewares($db, $matches['path']);
 
                     $data = array_merge(
+                        $data,
                         [
                             'datetime' => self::datetime(),
                             'base64file' => self::base64file(),
