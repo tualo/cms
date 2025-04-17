@@ -13,10 +13,13 @@
         "psr-4": {
             "Tualo\\Office\\CMS\\": "src/"
         },
-        "files": ["src/functions.php"]
+        "files": [
+            "src/functions.php"
+        ]
     },
     "minimum-stability": "dev",
     "require": {
+        "ramsey/uuid": "*",
         "tualo/ds": "*",
         "erusev/parsedown": "*",
         "tualo/pug": "*",
