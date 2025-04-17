@@ -2,6 +2,7 @@
 
 require_once "CMSMiddleware/Session.php";
 require_once "CMSMiddleware/Markdown.php";
+require_once "CMSMiddleware/Uuid.php";
 require_once "SetupCMSApache.php";
 require_once "Checks/Tables.php";
 require_once "Routes/Page.php";
