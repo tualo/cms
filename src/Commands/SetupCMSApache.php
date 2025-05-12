@@ -18,12 +18,8 @@ class SetupCMSApache implements ICommandline
 RewriteEngine on
 # SSLProxyEngine on
 
-# LogLevel alert rewrite:trace6
-# RewriteCond %{HTTP_HOST} ^www.domain.com$ [OR]
-# RewriteCond %{HTTP_HOST} ^domain.com$
-RewriteCond %{REQUEST_URI} ^/(\s*|page\.css|dokumentation)$
 RewriteCond %{REQUEST_URI} !^/{basename}
-RewriteRule ^/(\s*|page\.css|dokumentation)$ /{basename}/~/{token}/tualocms/page/$1 [PT]
+RewriteRule ^(.*)$ /{basename}/~/{token}/tualocms/page/$1 [PT]
 
 
 Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
