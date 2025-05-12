@@ -48,9 +48,27 @@ class RegisterClient implements ICommandline
         return false;
     }
 
+    public static function getToken(string $user, string $clientName): string
+    {
+        if (!isset($_SESSION['tualoapplication'])) $_SESSION['tualoapplication'] = [];
+        if (!isset($_SESSION['tualoapplication']['loggedIn'])) $_SESSION['tualoapplication']['loggedIn'] = true;
+        if (!isset($_SESSION['tualoapplication']['username'])) $_SESSION['tualoapplication']['username'] = $user;
+        if (!isset($_SESSION['tualoapplication']['client'])) $_SESSION['tualoapplication']['client'] = $clientName;
+
+        $session = App::get('session');
+        if (!isset($_SESSION['tualoapplication'])) $_SESSION['tualoapplication'] = [];
+        if (!isset($_SESSION['tualoapplication']['loggedIn'])) $_SESSION['tualoapplication']['loggedIn'] = true;
+        if (!isset($_SESSION['tualoapplication']['username'])) $_SESSION['tualoapplication']['username'] = $user;
+        if (!isset($_SESSION['tualoapplication']['client'])) $_SESSION['tualoapplication']['client'] = $clientName;
+
+        $defaultDays = App::configuration('cms', 'oauth_days', 365);
+        $token = $session->registerOAuth($force = false, $anyclient = false, $path = 'tualocms/page/*', $name = 'CMS (Public)', $device = gethostname());
+        $session->oauthValidDays($token, $defaultDays);
+        return $token;
+    }
+
     public static function run(Args $args)
     {
-
         $clientName = $args->getOpt('client');
         if (is_null($clientName)) throw new \Exception('client not set');
         $user = $args->getOpt('user');
@@ -58,25 +76,6 @@ class RegisterClient implements ICommandline
 
         $db = self::getClientDB($clientName);
         if (is_null($db)) throw new \Exception('clientdb not fount');
-
-        try {
-            if (!isset($_SESSION['tualoapplication'])) $_SESSION['tualoapplication'] = [];
-            if (!isset($_SESSION['tualoapplication']['loggedIn'])) $_SESSION['tualoapplication']['loggedIn'] = true;
-            if (!isset($_SESSION['tualoapplication']['username'])) $_SESSION['tualoapplication']['username'] = $user;
-            if (!isset($_SESSION['tualoapplication']['client'])) $_SESSION['tualoapplication']['client'] = $clientName;
-
-            $session = App::get('session');
-            if (!isset($_SESSION['tualoapplication'])) $_SESSION['tualoapplication'] = [];
-            if (!isset($_SESSION['tualoapplication']['loggedIn'])) $_SESSION['tualoapplication']['loggedIn'] = true;
-            if (!isset($_SESSION['tualoapplication']['username'])) $_SESSION['tualoapplication']['username'] = $user;
-            if (!isset($_SESSION['tualoapplication']['client'])) $_SESSION['tualoapplication']['client'] = $clientName;
-
-            $defaultDays = App::configuration('cms', 'oauth_days', 365);
-            $token = $session->registerOAuth($force = false, $anyclient = false, $path = 'tualocms/page/*', $name = 'CMS (Public)', $device = gethostname());
-            $session->oauthValidDays($token, $defaultDays);
-            echo $token . PHP_EOL;
-        } catch (\Exception $e) {
-            echo $e->getMessage();
-        }
+        echo self::getToken($user, $clientName) . "\n";
     }
 }
