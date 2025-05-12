@@ -45,6 +45,8 @@ EOT;
     public static function setup(Cli $cli)
     {
         $cli->command(self::getCommandName())
+            ->opt('client', 'the clientsystem', true, 'string')
+            ->opt('user', 'the existing user', true, 'string')
             ->description('setupapache get htaccess.')
         ;
     }
