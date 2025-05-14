@@ -4,10 +4,10 @@ select
 
     tualocms_page,
     group_concat(
-        concat( policy,' ',ifnull(`value`,''))
+        concat( policy,'=',ifnull(`value`,''))
 
         order by position
-        separator ';'
+        separator ','
     ) permission
 from view_readtable_tualocms_page_permission_policy 
 where active = 1
