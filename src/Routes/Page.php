@@ -100,6 +100,8 @@ class Page implements IRoute
 
 
         Route::add('/tualocms/page/(?P<path>.*).css', function ($matches) {
+
+
             $db = TualoApplication::get('session')->getDB();
             $session = TualoApplication::get('session');
             try {
@@ -116,6 +118,7 @@ class Page implements IRoute
         }, array('get', 'post'), true);
 
         Route::add('/tualocms/page/public/(?P<path>.*)', function ($matches) {
+
 
 
 
@@ -147,9 +150,10 @@ class Page implements IRoute
         Route::add('/tualocms/page/(?P<path>.*)', function ($matches) {
 
 
+
             // header("Content-Security-Policy: base-uri 'none', base-uri 'self'; default-src 'self' data:; script-src 'self' 'sha256-+YWRMZ88jMyO7jVlBA52tZADiPobPIUA8LAWee68Fvs='; style-src 'self' 'sha256-+YWRMZ88jMyO7jVlBA52tZADiPobPIUA8LAWee68Fvs='; form-action 'self'; img-src 'self' data:; worker-src 'self' ;");
 
-            header("Permissions-Policy: geolocation=(),microphone=(),sync-xhr=(self),camera=(),usb=()");
+            //             header("Permissions-Policy: geolocation=(),microphone=(),sync-xhr=(self),camera=(),usb=()");
 
 
 

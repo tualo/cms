@@ -33,6 +33,13 @@ class Session
         return $this;
     }
 
+    public function clear(): Session
+    {
+        @session_start();
+        $_SESSION = [];
+        return $this;
+    }
+
     public static function run(&$request, &$result)
     {
         $result['session'] = new Session();
