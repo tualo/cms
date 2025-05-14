@@ -4,10 +4,17 @@ CREATE TABLE IF NOT EXISTS `tualocms_dateien` (
   `titel` varchar(255) NOT NULL,
   `typ` varchar(36) NOT NULL,
   `file_id` varchar(36) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uidx_tualocms_dateien_typ` (`typ`),
-  CONSTRAINT `tualocms_dateien_ibfk_1` FOREIGN KEY (`typ`) REFERENCES `tualocms_dateien_typen` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  PRIMARY KEY (`id`)
+    -- ,
+  -- UNIQUE KEY `uidx_tualocms_dateien_typ` (`typ`),
+  -- CONSTRAINT `tualocms_dateien_ibfk_1` FOREIGN KEY (`typ`) REFERENCES `tualocms_dateien_typen` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
+
+alter table `tualocms_dateien` drop foreign key if exists `tualocms_dateien_ibfk_1`;
+alter table `tualocms_dateien` drop key if exists uidx_tualocms_dateien_typ ;
+alter table `tualocms_dateien` add constraint   `tualocms_dateien_typ` foreign key if not exists  (`typ`) references `tualocms_dateien_typen` (`id`) on delete cascade on update cascade;
+
+
 
 
 

@@ -21,12 +21,6 @@ CREATE TABLE IF NOT EXISTS `tualocms_page` (
 );
 
 
-
-CREATE TABLE IF NOT EXISTS `tualocms_middleware` (
-  `tualocms_middleware` varchar(50) NOT NULL,
-  PRIMARY KEY (`tualocms_middleware`)
-);
-
 CREATE TABLE IF NOT EXISTS `tualocms_page_middleware` (
   `tualocms_page` varchar(36) NOT NULL,
   `tualocms_middleware` varchar(50) NOT NULL,

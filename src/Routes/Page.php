@@ -147,6 +147,12 @@ class Page implements IRoute
         Route::add('/tualocms/page/(?P<path>.*)', function ($matches) {
 
 
+            // header("Content-Security-Policy: base-uri 'none', base-uri 'self'; default-src 'self' data:; script-src 'self' 'sha256-+YWRMZ88jMyO7jVlBA52tZADiPobPIUA8LAWee68Fvs='; style-src 'self' 'sha256-+YWRMZ88jMyO7jVlBA52tZADiPobPIUA8LAWee68Fvs='; form-action 'self'; img-src 'self' data:; worker-src 'self' ;");
+
+            header("Permissions-Policy: geolocation=(),microphone=(),sync-xhr=(self),camera=(),usb=()");
+
+
+
             $session = TualoApplication::get('session');
             $db = $session->getDB();
 
@@ -160,8 +166,46 @@ class Page implements IRoute
                 $table->limit(1);
                 $table->read();
                 if (!$table->empty()) {
-
                     $data = $table->getSingle();
+
+
+                    $pmh = (new DSTable($db, 'view_load_tualocms_page_permission_policy'))->filter(
+                        'tualocms_page',
+                        '=',
+                        $data['tualocms_page']
+                    )->limit(1)->read();
+                    if (!$pmh->empty()) {
+                        $pmh = $pmh->getSingle();
+                        if (isset($pmh['permission'])) {
+                            header("Permissions-Policy: " . $pmh['permission']);
+                        } else {
+                            header("Permissions-Policy: geolocation=(),microphone=(),sync-xhr=(self),camera=(),usb=()");
+                            header("CMSPMH: default PMH");
+                        }
+                    } else {
+                        header("Permissions-Policy: geolocation=(),microphone=(),sync-xhr=(self),camera=(),usb=()");
+                        header("CMSPMH: default PMH");
+                    }
+
+
+                    $csp = (new DSTable($db, 'view_load_tualocms_page_csp'))->filter(
+                        'tualocms_page',
+                        '=',
+                        $data['tualocms_page']
+                    )->limit(1)->read();
+                    if (!$csp->empty()) {
+                        $csp = $csp->getSingle();
+                        if (isset($csp['csp'])) {
+                            header("Content-Security-Policy: " . $csp['csp']);
+                        } else {
+                            header("Content-Security-Policy:  base-uri 'self'; default-src 'self' data:; script-src 'self'; style-src 'self' ; form-action 'self'; img-src 'self' data:; worker-src 'self';");
+                            header("CMS: default CSP");
+                        }
+                    } else {
+                        header("Content-Security-Policy: base-uri 'self'; default-src 'self' data:; script-src 'self'; style-src 'self' ; form-action 'self'; img-src 'self' data:; worker-src 'self';");
+                        header("CMS: default CSP");
+                    }
+
                     TualoApplication::set("pugCachePath", TualoApplication::get("basePath") . '/cache/' . $db->dbname . '/cache');
                     Route::$finished = true;
                     $template = $data['pug_file'];

@@ -4,11 +4,13 @@ CREATE TABLE IF NOT EXISTS `tualocms_bilder` (
   `titel` varchar(255) NOT NULL,
   `typ` varchar(36) NOT NULL,
   `file_id` varchar(36) NOT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uidx_tualocms_bilder_typ` (`typ`),
-  CONSTRAINT `tualocms_bilder_ibfk_1` FOREIGN KEY (`typ`) REFERENCES `tualocms_bilder_typen` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+  PRIMARY KEY (`id`)
+  -- CONSTRAINT `tualocms_bilder_ibfk_1` FOREIGN KEY (`typ`) REFERENCES `tualocms_bilder_typen` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ;
 
+alter table `tualocms_bilder` drop foreign key if exists `tualocms_bilder_ibfk_1`;
+alter table `tualocms_bilder` drop key if exists uidx_tualocms_bilder_typ ;
+alter table `tualocms_bilder` add constraint `tualocms_bilder_typ` foreign key if not exists (`typ`) references `tualocms_bilder_typen` (`id`) on delete cascade on update cascade;
 
 
 CREATE VIEW if not exists `view_readtable_tualocms_bilder` AS

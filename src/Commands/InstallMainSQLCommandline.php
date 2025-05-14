@@ -51,9 +51,9 @@ class InstallMainSQLCommandline implements ICommandline
     {
 
         $files = [
-            'ddl-cms' => 'setup main ddl ',
+            //            'ddl-cms' => 'setup main ddl ',
             'middlewares' => 'setup cms middlewares ',
-            'ds.definition' => 'setup cms ds definition ',
+            // 'ds.definition' => 'setup cms ds definition ',
 
             'install/ds_class' => 'setup ds_class',
 
@@ -97,6 +97,24 @@ class InstallMainSQLCommandline implements ICommandline
 
             'install/tualocms_dateien' => 'setup tualocms_dateien',
             'install/tualocms_dateien.ds' => 'setup tualocms_dateien.ds',
+
+            'install/tualocms_csp' => 'setup tualocms_csp',
+            'install/tualocms_csp.ds' => 'setup tualocms_csp.ds',
+
+            'install/tualocms_page_csp' => 'setup tualocms_page_csp',
+            'install/tualocms_page_csp.ds' => 'setup tualocms_page_csp.ds',
+
+            'install/view_load_tualocms_page_csp' => 'setup view_load_tualocms_page_csp',
+            'install/view_load_tualocms_page_csp.ds' => 'setup view_load_tualocms_page_csp.ds',
+
+            'install/tualocms_permission_policy' => 'setup tualocms_permission_policy',
+            'install/tualocms_permission_policy.ds' => 'setup tualocms_permission_policy.ds',
+
+            'install/tualocms_page_permission_policy' => 'setup tualocms_page_permission_policy',
+            'install/tualocms_page_permission_policy.ds' => 'setup tualocms_page_permission_policy.ds',
+
+            'install/view_load_tualocms_page_permission_policy' => 'setup view_load_tualocms_page_permission_policy',
+            'install/view_load_tualocms_page_permission_policy.ds' => 'setup view_load_tualocms_page_permission_policy.ds',
         ];
 
 
