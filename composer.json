@@ -25,6 +25,6 @@
         "tualo/pug": "*",
         "tualo/cherry-markdown": "*",
         "michelf/php-markdown": "*",
-        "spatie/laravel-sitemap": "*",
+        "spatie/laravel-sitemap": "*"
     }
 }
