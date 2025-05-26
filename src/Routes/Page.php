@@ -242,7 +242,11 @@ class Page implements IRoute
                     );
                     TualoApplication::body($html);
                     TualoApplication::contenttype('text/html');
-                    http_response_code(200);
+                    if (isset(CMSMiddlewareHelper::$result['responsecode'])) {
+                        http_response_code(CMSMiddlewareHelper::$result['responsecode']);
+                    } else {
+                        http_response_code(200);
+                    }
                 } else {
 
 
