@@ -31,13 +31,9 @@ class CSRFCheck
     public static function run(&$request, &$result)
     {
         if (self::check()) {
-            $result['csrf'] = true;
         } else {
-            $result['csrf'] = false;
             $result['responsecode'] = 403; // Forbidden
             $result['response'] = 'CSRF token is invalid';
-            // Optionally, you can throw an exception or handle the error
-            // throw new \Exception('CSRF token is invalid');
         }
     }
 }
