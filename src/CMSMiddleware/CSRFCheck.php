@@ -15,11 +15,12 @@ class CSRFCheck
             isset($_SESSION['csrf']) &&
             isset($_REQUEST['csrf']) &&
             $_SESSION['csrf'] != '' &&
-            $_REQUEST['csrf'] != '' &&
-            $_SESSION['csrf'] === $_REQUEST['csrf']
+            $_REQUEST['csrf'] != ''
+
         ) {
-            // CSRF token is valid
-            // Optionally, you can regenerate the token to prevent reuse
+            if ($_SESSION['csrf'] !== $_REQUEST['csrf']) {
+                return false;
+            }
             return true;
         }
         return false;
@@ -30,8 +31,7 @@ class CSRFCheck
 
     public static function run(&$request, &$result)
     {
-        if (self::check()) {
-        } else {
+        if (self::check() === false) {
             $result['responsecode'] = 403; // Forbidden
             $result['response'] = 'CSRF token is invalid';
         }
