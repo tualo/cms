@@ -23,7 +23,17 @@ class Page implements IRoute
 
             $name = TualoApplication::configuration('cms', 'domain', $_SERVER['SERVER_NAME']);
             TualoApplication::contenttype('text/xml');
-            TualoApplication::body(SitemapGenerator::create('https://' . $name . '/')->render());
+            $data = [];
+            $data[] = '<?xml version="1.0" encoding="UTF-8"?>';
+            $data[] = '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+            $data[] = '<url>';
+            $data[] = '<loc>https://' . $name . '/loc>';
+            $data[] = '<lastmod>' . date('Y-m-d', time()) . '</lastmod>';
+            $data[] = '    <changefreq>daily</changefreq>';
+            $data[] = '<priority>1</priority>';
+            $data[] = '</url>';
+            $data[] = '</urlset>';
+            TualoApplication::body(implode("\n", $data));
         }, array('get'), false);
     }
 }
