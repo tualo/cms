@@ -34,6 +34,7 @@ class Sitemap implements IRoute
             $data[] = '</url>';
             $data[] = '</urlset>';
             TualoApplication::body(implode("\n", $data));
+            Route::$finished = true;
         }, array('get'), false);
     }
 }

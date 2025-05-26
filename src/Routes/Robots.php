@@ -30,7 +30,8 @@ class Robots implements IRoute
             */
             $name = TualoApplication::configuration('cms', 'domain', $_SERVER['SERVER_NAME']);
             TualoApplication::contenttype('text/plain');
-            echo "User-agent: *\nDisallow: / \n\nSitemap: https://$name/sitemap.xml";
+            TualoApplication::body("User-agent: *\nDisallow: / \n\nSitemap: https://$name/sitemap.xml");
+            Route::$finished = true;
             //}
         }, array('get'), false);
     }
