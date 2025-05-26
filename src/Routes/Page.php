@@ -260,7 +260,10 @@ class Page implements IRoute
                     }*/
 
                     Route::pathNotFound(function ($path) {
-                        TualoApplication::body("Not found ");
+                        TualoApplication::body("Not found");
+
+                        header("Permissions-Policy: geolocation=(),microphone=(),sync-xhr=(self),camera=(),usb=()");
+                        header("Content-Security-Policy:  base-uri 'self'; default-src 'self' data:; script-src 'self'; style-src 'self' ; form-action 'self'; img-src 'self' data:; worker-src 'self';");
                         TualoApplication::contenttype('text/html');
                         http_response_code(404);
                     });
