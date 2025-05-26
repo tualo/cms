@@ -21,9 +21,8 @@ class CSRFCheck
             if ($_SESSION['csrf'] !== $_REQUEST['csrf']) {
                 return false;
             }
-            return true;
         }
-        return false;
+        return true;
     }
 
 
