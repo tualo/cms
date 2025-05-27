@@ -80,9 +80,10 @@ class InstallMainSQLCommandline implements ICommandline
             'install/tualocms_section_tualocms_page'    => 'setup tualocms_section_tualocms_page',
             'install/tualocms_section_tualocms_page.ds' => 'setup tualocms_section_tualocms_page.ds',
 
+
+            'install/view_load_tualocms_page_section_attributes'    => 'setup view_load_tualocms_page_section_attributes',
             'install/view_load_tualocms_page'    => 'setup view_load_tualocms_page',
             'install/view_load_tualocms_page.ds' => 'setup view_load_tualocms_page.ds',
-
 
 
             'install/tualocms_bilder_typen' => 'setup tualocms_bilder_typen',
