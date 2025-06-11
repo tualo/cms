@@ -250,7 +250,7 @@ class CIDR
         return $range;
     }
 
-    public static function getIP($keys = ['REMOTE_ADDR', 'HTTP_X_FORWARDED_FOR', 'HTTP_CLIENT_IP'])
+    public static function getIP($keys = ['X-DDOSPROXY', 'HTTP_X_FORWARDED_FOR', 'HTTP_CLIENT_IP', 'REMOTE_ADDR'])
     {
         foreach ($keys as $key) {
             if (isset($_SERVER[$key]) && self::validIP($_SERVER[$key])) {
@@ -262,7 +262,7 @@ class CIDR
 
 
 
-    public function ip($keys = ['REMOTE_ADDR', 'HTTP_X_FORWARDED_FOR', 'HTTP_CLIENT_IP']): mixed
+    public function ip($keys =  ['X-DDOSPROXY', 'HTTP_X_FORWARDED_FOR', 'HTTP_CLIENT_IP', 'REMOTE_ADDR']): mixed
     {
         return CIDR::getIP($keys);
     }
