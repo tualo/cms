@@ -6,5 +6,6 @@ values
 ( '\\Tualo\\Office\\CMS\\CMSMiddleware\\Request' ),
 ( '\\Tualo\\Office\\CMS\\CMSMiddleware\\ServerInformation' ),
 ( '\\Tualo\\Office\\CMS\\CMSMiddleware\\CSRFToken' ),
-( '\\Tualo\\Office\\CMS\\CMSMiddleware\\CSRFCheck' )
+( '\\Tualo\\Office\\CMS\\CMSMiddleware\\CSRFCheck' ),
+( '\\Tualo\\Office\\CMS\\CMSMiddleware\\CIDR' )
 ;
