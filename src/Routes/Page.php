@@ -117,32 +117,43 @@ class Page implements IRoute
             }
         }, array('get', 'post'), true);
 
+
+
+
         Route::add('/tualocms/page/public/(?P<path>.*)', function ($matches) {
 
+            if (Route::checkDoubleDots($matches, 'path', 'Path contains ".."')) {
+                if (!isset($matches['path']) || $matches['path'] == '') {
+                    TualoApplication::body('Path not found');
+                    TualoApplication::contenttype('text/plain');
+                    http_response_code(404);
+                    return;
+                }
 
 
+                $publicpath =  TualoApplication::configuration(
+                    'tualo-cms',
+                    'public_path'
+                );
 
-            $publicpath =  TualoApplication::configuration(
-                'tualo-cms',
-                'public_path'
-            );
-            if ($publicpath !== false) {
-                if (file_exists(
-                    str_replace(
-                        '//',
-                        '/',
-                        implode('/', [
+                if ($publicpath !== false) {
+                    if (file_exists(
+                        str_replace(
+                            '//',
+                            '/',
+                            implode('/', [
+                                $publicpath,
+                                $matches['path']
+                            ])
+                        )
+                    )) {
+                        TualoApplication::etagFile(str_replace('//', '/', implode('/', [
                             $publicpath,
                             $matches['path']
-                        ])
-                    )
-                )) {
-                    TualoApplication::etagFile(str_replace('//', '/', implode('/', [
-                        $publicpath,
-                        $matches['path']
-                    ])), true);
-                    Route::$finished = true;
-                    http_response_code(200);
+                        ])), true);
+                        Route::$finished = true;
+                        http_response_code(200);
+                    }
                 }
             }
         }, ['get', 'post'], true);
@@ -263,6 +274,8 @@ class Page implements IRoute
                         return false;
                     }*/
 
+                    //print_r(TualoApplication::get('configuration'));
+
                     Route::pathNotFound(function ($path) {
                         TualoApplication::body("Not found");
 
@@ -279,6 +292,6 @@ class Page implements IRoute
                 TualoApplication::logger('CMS')->error($e->getMessage());
                 TualoApplication::result('msg', $e->getMessage());
             }
-        }, ['get', 'post'], true);
+        }, ['get', 'post'], false);
     }
 }
