@@ -2,9 +2,6 @@
 
 namespace Tualo\Office\CMS\CMSMiddleware;
 
-use Tualo\Office\Basic\TualoApplication as App;
-use Michelf\MarkdownExtra;
-use Parsedown;
 
 class CSRFCheck
 {
