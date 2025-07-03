@@ -20,11 +20,11 @@
   "minimum-stability": "dev",
   "require": {
     "ramsey/uuid": "~4.9.0",
-    "tualo/ds": "^1.0.1",
+    "tualo/ds": "^1.0",
     "erusev/parsedown": "v2.0.0-beta-1",
-    "tualo/pug": "^1.0.2",
+    "tualo/pug": "^1.0",
     "tualo/cherry-markdown": "^1.0.1",
     "michelf/php-markdown": "2.0.0"
   },
-  "version": "1.0.3"
+  "version": "1.0.4"
 }
