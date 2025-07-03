@@ -1,29 +1,30 @@
 {
-    "name": "tualo/cms",
-    "description": "Sample Module for tualo office",
-    "type": "library",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Thomas Hoffmann",
-            "email": "thomas.hoffmann@tualo.de"
-        }
-    ],
-    "autoload": {
-        "psr-4": {
-            "Tualo\\Office\\CMS\\": "src/"
-        },
-        "files": [
-            "src/functions.php"
-        ]
-    },
-    "minimum-stability": "dev",
-    "require": {
-        "ramsey/uuid": "*",
-        "tualo/ds": "*",
-        "erusev/parsedown": "*",
-        "tualo/pug": "*",
-        "tualo/cherry-markdown": "*",
-        "michelf/php-markdown": "*"
+  "name": "tualo/cms",
+  "description": "Sample Module for tualo office",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Thomas Hoffmann",
+      "email": "thomas.hoffmann@tualo.de"
     }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Tualo\\Office\\CMS\\": "src/"
+    },
+    "files": [
+      "src/functions.php"
+    ]
+  },
+  "minimum-stability": "dev",
+  "require": {
+    "ramsey/uuid": "~4.9.0",
+    "tualo/ds": "^1.0.1",
+    "erusev/parsedown": "v2.0.0-beta-1",
+    "tualo/pug": "^1.0.1",
+    "tualo/cherry-markdown": "^1.0.1",
+    "michelf/php-markdown": "2.0.0"
+  },
+  "version": "1.0.1"
 }
