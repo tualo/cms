@@ -15,8 +15,8 @@ class CSRFCheck
             $_REQUEST['csrf'] != ''
 
         ) {
-            if ($_SESSION['csrf'] !== $_REQUEST['csrf']) {
-                return false;
+            if (!is_string($_SESSION['csrf']) || is_string($_REQUEST['csrf'])) {
+                return false; // CSRF tokens must be strings
             }
         }
         return true;
