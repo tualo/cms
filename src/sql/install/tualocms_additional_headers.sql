@@ -1,4 +1,4 @@
-
+delimiter ;
 CREATE TABLE IF NOT EXISTS `tualocms_additional_headers` (
   `header_key` varchar(100) NOT NULL,
   `header_value` varchar(255) DEFAULT NULL,
