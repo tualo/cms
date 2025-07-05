@@ -116,6 +116,15 @@ class InstallMainSQLCommandline implements ICommandline
 
             'install/view_load_tualocms_page_permission_policy' => 'setup view_load_tualocms_page_permission_policy',
             'install/view_load_tualocms_page_permission_policy.ds' => 'setup view_load_tualocms_page_permission_policy.ds',
+
+            'install/tualocms_additional_headers' => 'setup tualocms_additional_headers',
+            'install/tualocms_additional_headers.ds' => 'setup tualocms_additional_headers.ds',
+
+            'install/tualocms_page_headers' => 'setup tualocms_page_headers',
+            'install/tualocms_page_headers.ds' => 'setup tualocms_page_headers.ds',
+
+            'install/view_load_tualocms_page_headers' => 'setup view_load_tualocms_page_headers',
+            'install/view_load_tualocms_page_headers.ds' => 'setup view_load_tualocms_page_headers.ds',
         ];
 
 

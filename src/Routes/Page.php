@@ -221,6 +221,31 @@ class Page implements IRoute
                         header("CMS: default CSP");
                     }
 
+                    // view_load_tualocms_page_headers
+                    $headers = (new DSTable($db, 'view_load_tualocms_page_headers'))
+                        ->filter('tualocms_page', '=', $data['tualocms_page'])
+                        ->filter('valid_from', '<=', date('Y-m-d H:i:s'))
+                        ->filter('valid_until', '>=', date('Y-m-d H:i:s'))
+                        ->read();
+                    if (!$headers->empty()) {
+                        foreach ($headers->get() as $header) {
+                            if (isset($header['header_key']) && isset($header['header_value'])) {
+                                header($header['header_key'] . ': ' . $header['header_value']);
+                            }
+                        }
+                    } else {
+                        $additionalHeaders = (new DSTable($db, 'tualocms_additional_headers'))
+                            ->filter('valid_from', '<=', date('Y-m-d H:i:s'))
+                            ->filter('valid_until', '>=', date('Y-m-d H:i:s'))
+                            ->read();
+                        if (!$additionalHeaders->empty()) {
+                            foreach ($additionalHeaders->get() as $header) {
+                                if (isset($header['header_key']) && isset($header['value'])) {
+                                    header($header['header_key'] . ': ' . $header['value']);
+                                }
+                            }
+                        }
+                    }
                     TualoApplication::set("pugCachePath", TualoApplication::get("basePath") . '/cache/' . $db->dbname . '/cache');
                     Route::$finished = true;
                     $template = $data['pug_file'];
