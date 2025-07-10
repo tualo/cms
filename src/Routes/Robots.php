@@ -25,7 +25,8 @@ class Robots implements IRoute
             try {
                 $db_content = DSTable::instance("tualocms_default_robots")->f('id', '=', 'default')->getSingle();
                 if ($db_content) {
-                    $content = $db_content['content'];
+                    //print_r($db_content['data']);
+                    $content = $db_content['data'];
                 }
             } catch (\Exception $e) {
                 // TualoApplication::result('error', $e->getMessage());
