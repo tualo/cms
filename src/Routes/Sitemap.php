@@ -56,7 +56,7 @@ class Sitemap implements IRoute
 
                 foreach ($result as $row) {
                     $data[] = '<url>';
-                    $data[] = '<loc>https://' . TualoApplication::configuration('cms', 'domain', $_SERVER['SERVER_NAME']) . '/' . $row['path'] . '</loc>';
+                    $data[] = '<loc>https://' . TualoApplication::configuration('cms', 'domain', $_SERVER['SERVER_NAME']) . '' . $row['path'] . '</loc>';
                     $data[] = '<lastmod>' . date('Y-m-d', time()) . '</lastmod>';
                     $data[] = '    <changefreq>daily</changefreq>';
                     $data[] = '<priority>0.5</priority>';
