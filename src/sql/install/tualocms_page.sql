@@ -15,3 +15,21 @@ CREATE TABLE IF NOT EXISTS `tualocms_page` (
 
 
 alter table tualocms_page add if not exists show_in_sitemap tinyint default 1;
+
+/*
+alter table languages add meta_description_en varchar(255) default '';
+alter table languages add meta_description_de varchar(255) default '';
+alter table languages add meta_keys_en varchar(255) default '';
+alter table languages add meta_keys_de varchar(255) default '';
+
+alter table languages add meta_title_en varchar(255) default '';
+alter table languages add meta_title_de varchar(255) default '';
+
+*/
+alter table tualocms_page add if not exists meta_description_en varchar(255) default '';
+alter table tualocms_page add if not exists meta_description_de varchar(255) default '';
+
+alter table tualocms_page add if not exists meta_keys_en varchar(255) default '';
+alter table tualocms_page add if not exists meta_keys_de varchar(255) default '';
+alter table tualocms_page add if not exists meta_title_en varchar(255) default '';
+alter table tualocms_page add if not exists meta_title_de varchar(255) default '';

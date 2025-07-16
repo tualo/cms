@@ -7,7 +7,8 @@ select
     '' tualocms_page,
     '' path,
     '' pug_file,
-    '' page
+    '' page,
+    1 show_in_sitemap
 from
     `tualocms_page`
 where false
@@ -20,6 +21,7 @@ select
     `tualocms_page`.`tualocms_page` AS `tualocms_page`,
     `tualocms_page`.`path` AS `path`,
     `tualocms_page`.`pug_file` AS `pug_file`,
+    `tualocms_page`.`show_in_sitemap`,
     json_object(
         'id',
         `tualocms_page`.`tualocms_page`,
@@ -66,7 +68,21 @@ select
                     `tualocms_section_tualocms_page`.`position` ASC
             ),
             json_array()
-        )
+        ),
+        'meta_description_en',
+        `tualocms_page`.`meta_description_en`,
+        'meta_description_de',
+        `tualocms_page`.`meta_description_de`,
+        'meta_keys_en',
+        `tualocms_page`.`meta_keys_en`,
+        'meta_keys_de',
+        `tualocms_page`.`meta_keys_de`,
+
+        'meta_title_en',
+        `tualocms_page`.`meta_title_en`,
+        'meta_title_de',
+        `tualocms_page`.`meta_title_de`
+        
     ) AS `page`
 from
     (
@@ -101,7 +117,8 @@ select
      tualocms_page,
      path,
      pug_file,
-     page
+     page,
+     show_in_sitemap
 from view_load_tualocms_page_intern
 union   
     
@@ -110,7 +127,8 @@ union
      tualocms_page,
      path,
      pug_file,
-     page
+     page,
+     show_in_sitemap
 from 
     view_load_tualocms_page_slug
 ;
