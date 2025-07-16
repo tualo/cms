@@ -21,6 +21,7 @@ class Sitemap implements IRoute
         Route::add('/tualocms/page/sitemap.xml', function ($matches) {
 
 
+
             $name = TualoApplication::configuration('cms', 'domain', $_SERVER['SERVER_NAME']);
             TualoApplication::contenttype('text/xml');
             $data = [];
@@ -33,7 +34,10 @@ class Sitemap implements IRoute
             $data[] = '<priority>1</priority>';
             $data[] = '</url>';
             $data[] = '</urlset>';
+
             TualoApplication::body(implode("\n", $data));
+
+
             Route::$finished = true;
         }, array('get'), false);
     }

@@ -119,54 +119,7 @@ class Page implements IRoute
 
 
 
-
-        Route::add('/tualocms/page/public/(?P<path>.*)', function ($matches) {
-
-            if (Route::checkDoubleDots($matches, 'path', 'Path contains ".."')) {
-                if (!isset($matches['path']) || $matches['path'] == '') {
-                    TualoApplication::body('Path not found');
-                    TualoApplication::contenttype('text/plain');
-                    http_response_code(404);
-                    return;
-                }
-
-
-                $publicpath =  TualoApplication::configuration(
-                    'tualo-cms',
-                    'public_path'
-                );
-
-                if ($publicpath !== false) {
-                    if (file_exists(
-                        str_replace(
-                            '//',
-                            '/',
-                            implode('/', [
-                                $publicpath,
-                                $matches['path']
-                            ])
-                        )
-                    )) {
-                        TualoApplication::etagFile(str_replace('//', '/', implode('/', [
-                            $publicpath,
-                            $matches['path']
-                        ])), true);
-                        Route::$finished = true;
-                        http_response_code(200);
-                    }
-                }
-            }
-        }, ['get', 'post'], true);
-
         Route::add('/tualocms/page/(?P<path>.*)', function ($matches) {
-
-
-
-            // header("Content-Security-Policy: base-uri 'none', base-uri 'self'; default-src 'self' data:; script-src 'self' 'sha256-+YWRMZ88jMyO7jVlBA52tZADiPobPIUA8LAWee68Fvs='; style-src 'self' 'sha256-+YWRMZ88jMyO7jVlBA52tZADiPobPIUA8LAWee68Fvs='; form-action 'self'; img-src 'self' data:; worker-src 'self' ;");
-
-            //             header("Permissions-Policy: geolocation=(),microphone=(),sync-xhr=(self),camera=(),usb=()");
-
-
 
             $session = TualoApplication::get('session');
             $db = $session->getDB();
@@ -259,8 +212,24 @@ class Page implements IRoute
 
                     PUG::exportPUG($db);
                     if (!isset($data['page'])) throw new \Exception('attribute page not found');
+
+
+
                     $data['page'] = json_decode($data['page'], true);
-                    self::middlewares($db, $matches['path']);
+                    if (!isset($data['page']['path'])) throw new \Exception('attribute page/path not found');
+                    if ($data['page'] === null) {
+                        throw new \Exception('page is not valid json');
+                    }
+                    if (!isset($data['page']['params'])) {
+                        $data['page']['params'] = [];
+                    }
+                    foreach ($data['page']['params'] as $key => $value) {
+                        if (!isset($_REQUEST[$key]) && !isset($_POST[$key]) && !isset($_GET[$key])) {
+                            $_REQUEST[$key] = $value;
+                        }
+                    }
+
+                    self::middlewares($db, $data['page']['path']);
 
                     $data = array_merge(
                         $data,

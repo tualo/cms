@@ -1,7 +1,22 @@
 DELIMITER ;
 
-CREATE OR REPLACE VIEW `view_load_tualocms_page` AS
+CREATE VIEW if not exists  `view_load_tualocms_page_slug` AS
+
+select 
+    '' tualocms_page_id,
+    '' tualocms_page,
+    '' path,
+    '' pug_file,
+    '' page
+from
+    `tualocms_page`
+where false
+;
+
+
+CREATE OR REPLACE VIEW `view_load_tualocms_page_intern` AS
 select
+    `tualocms_page`.`tualocms_page` AS `tualocms_page_id`,
     `tualocms_page`.`tualocms_page` AS `tualocms_page`,
     `tualocms_page`.`path` AS `path`,
     `tualocms_page`.`pug_file` AS `pug_file`,
@@ -16,6 +31,12 @@ select
         `tualocms_page`.`content`,
         'template',
         `tualocms_page`.`pug_file`,
+        'params', json_object(
+            'title',
+            `tualocms_page`.`title`,
+            'path',
+            `tualocms_page`.`path`
+        ),
         'sections',
         ifnull(
             json_arrayagg(
@@ -71,4 +92,25 @@ from
         )
     )
 group by
-    `tualocms_page`.`tualocms_page`;
+    `tualocms_page`.`tualocms_page`
+;
+
+CREATE or REPLACE    VIEW `view_load_tualocms_page` AS
+select 
+     tualocms_page_id,
+     tualocms_page,
+     path,
+     pug_file,
+     page
+from view_load_tualocms_page_intern
+union   
+    
+    select 
+    tualocms_page_id,
+     tualocms_page,
+     path,
+     pug_file,
+     page
+from 
+    view_load_tualocms_page_slug
+;
