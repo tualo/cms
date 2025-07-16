@@ -38,7 +38,7 @@ class Sitemap implements IRoute
     public static function register()
     {
         Route::add('/tualocms/page/sitemap.xml', function ($matches) {
-
+            TualoApplication::contenttype('text/xml');
             try {
                 $sql = '
                 select 
