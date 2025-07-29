@@ -42,6 +42,14 @@ class Tables  extends PostCheck
                     'header_value' => 'varchar(255)'
                 ]
             ],
+            'tualocms_domains' => [
+                'columns' => [
+                    'domain' => 'varchar(128)',
+                    'valid_from' => 'datetime',
+                    'valid_to' => 'datetime',
+                    'notes' => 'text'
+                ]
+            ]
         ];
         self::tableCheck(
             'cms',
