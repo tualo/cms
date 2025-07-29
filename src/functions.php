@@ -21,3 +21,4 @@ require_once "Commands/InstallMainSQLCommandline.php";
 require_once "Commands/InstallMenuSQLCommandline.php";
 require_once "Commands/RegisterClient.php";
 require_once "Commands/SetupCMSApache.php";
+require_once "Commands/SystemCheck.php";
