@@ -4,12 +4,7 @@ namespace Tualo\Office\CMS\Commands;
 
 use Garden\Cli\Cli;
 use Garden\Cli\Args;
-use phpseclib3\Math\BigInteger\Engines\PHP;
-use Tualo\Office\Basic\ISetupCommandline;
-use Tualo\Office\ExtJSCompiler\Helper;
-use Tualo\Office\Basic\TualoApplication as App;
-use Tualo\Office\Basic\PostCheck;
-use Tualo\Office\Basic\CommandLineInstallSessionSQL;
+
 use Tualo\Office\DS\Commandline\Setup as BaseSetup;
 
 class Setup extends BaseSetup
@@ -36,11 +31,8 @@ class Setup extends BaseSetup
         $parentCommands = parent::getCommands($args);
         return [
             ...$parentCommands,
-            'install-sql-ds-main',
-            'install-sql-ds',
-            'install-sql-ds-dsx',
-            'install-sql-ds-privacy',
-            'install-sql-ds-docsystem',
+
+
             'install-sql-tualojs',
             'install-sql-monaco',
             'install-sql-dashboard',
