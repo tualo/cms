@@ -25,3 +25,5 @@ require_once "Commands/SetupCMSApache.php";
 require_once "Commands/SystemCheck.php";
 require_once "Commands/SystemChecks/AuthTokens.php";
 require_once "Commands/SystemChecks/CertCheck.php";
+
+require_once "Commands/Setup.php";

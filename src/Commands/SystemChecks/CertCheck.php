@@ -60,14 +60,16 @@ class CertCheck extends SystemCheck
                     } else {
                         self::formatPrintLn(['yellow'], 'No IPs found in database for domain: ' . $domain['domain'] . ', using DNS records instead.');
                         $tualocms_domain_ips = array_map(function ($ip) {
+                            if (isset($ip['ipv6'])) {
+                                $ip['ip'] = $ip['ipv6'];
+                            }
                             return ['ip' => $ip['ip']];
                         }, $dns);
 
                         foreach ($tualocms_domain_ips as $domain_ip) {
                             //tualocms_domain_ip
                             $sql = '
-                            insert into tualocms_domain_ip (domain, ip) values ({domain}, {ip}) 
-                            on duplicate key update ip = values(ip)
+                            insert ignore into tualocms_domain_ip (domain, ip) values ({domain}, {ip}) 
                             ';
                             $clientdb->direct($sql, [
                                 'domain' => $domain['domain'],
@@ -79,6 +81,7 @@ class CertCheck extends SystemCheck
                 }
                 $last_fingerprint = '';
                 $last_valid_date = 0;
+                self::intent();
                 foreach ($tualocms_domain_ips as $domain_ip) {
 
 
@@ -94,7 +97,21 @@ class CertCheck extends SystemCheck
                             ]
                         ]
                     );
+                    // test ip for ip6 format
+                    if (filter_var($domain_ip['ip'], FILTER_VALIDATE_IP, FILTER_FLAG_IPV6)) {
+                        $domain_ip['ip'] = '[' . $domain_ip['ip'] . ']';
+                    }
+                    set_error_handler(function () {
+                        return true;
+                    });
                     $read = stream_socket_client("ssl://" . $domain_ip['ip'] . ":443", $errno, $errstr, 30, STREAM_CLIENT_CONNECT, $get);
+                    restore_error_handler();
+                    if ($read === false) {
+                        self::formatPrintLn(['red'], '❌  Could not connect to domain: ' . $domain['domain'] . ' IP: ' . $domain_ip['ip'] . ' - ' . $errstr);
+                        $return_value += 1;
+                        self::unintent();
+                        continue;
+                    }
                     $cert = stream_context_get_params($read);
                     $certinfo = openssl_x509_parse($cert['options']['ssl']['peer_certificate']);
                     if ($certinfo === false) {
@@ -123,7 +140,7 @@ class CertCheck extends SystemCheck
                         $return_value += 1;
                     }
                     if (($last_valid_date != 0) && ($valid_to_unix < $last_valid_date)) {
-                        self::formatPrintLn(['red'], '❌  Certificate valid date changed for domain: ' . $domain['domain'] . ' IP: ' . $domain_ip['ip']);
+                        self::formatPrintLn(['red'], '❌  Certificate valid date changed for domain: ' . $domain['domain'] . ' IP: ' . $domain_ip['ip'] . ' (' . $day_valid . ' days left)');
                         $return_value += 1;
                     }
                     if ($valid_to_unix < time()) {
@@ -169,6 +186,7 @@ class CertCheck extends SystemCheck
 
                     self::unintent();
                 }
+                self::unintent();
                 self::unintent();
             }
         }
