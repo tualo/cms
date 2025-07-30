@@ -30,6 +30,7 @@ class CertCheck extends SystemCheck
 
     public static function test(array $config): int
     {
+        $return_value = 0;
 
         $clientdb = App::get('clientDB');
         if (is_null($clientdb)) return 1;
@@ -56,76 +57,74 @@ class CertCheck extends SystemCheck
                     self::unintent();
                     return 2;
                 }
+                $last_fingerprint = '';
+                $last_valid_date = 0;
                 foreach ($tualocms_domain_ips as $domain_ip) {
 
-                    self::formatPrintLn(['blue'], 'IP found: ' . $domain_ip['ip']);
-                    $urls[] = [
-                        'name' => $domain['domain'],
-                        'url' => 'https://' . $domain['domain'],
-                        'ip' => $domain_ip['ip']
-                    ];
 
-                    // serialNumberHex
+                    self::formatPrintLn(['blue'], 'IP found: ' . $domain_ip['ip']);
+                    self::intent();
+
+
+                    $get = stream_context_create(
+                        [
+                            "ssl" => [
+                                'peer_name' => $domain['domain'],
+                                "capture_peer_cert" => TRUE
+                            ]
+                        ]
+                    );
+                    $read = stream_socket_client("ssl://" . $domain_ip['ip'] . ":443", $errno, $errstr, 30, STREAM_CLIENT_CONNECT, $get);
+                    $cert = stream_context_get_params($read);
+                    $certinfo = openssl_x509_parse($cert['options']['ssl']['peer_certificate']);
+                    if ($certinfo === false) {
+                        self::formatPrintLn(['red'], 'Could not parse certificate for domain: ' . $domain['domain'] . ' IP: ' . $domain_ip['ip']);
+                        $return_value += 1;
+                        self::unintent();
+                        continue;
+                    }
+
+                    $fingerprint = openssl_x509_fingerprint($cert['options']['ssl']['peer_certificate'], 'sha256', false);
+                    if ($fingerprint === false) {
+                        self::formatPrintLn(['red'], 'Could not get fingerprint for domain: ' . $domain['domain'] . ' IP: ' . $domain_ip['ip']);
+                        $return_value += 1;
+                        self::unintent();
+                        continue;
+                    }
+
+                    $valid_to_unix = $certinfo['validTo_time_t'];
+                    $valid_date = date("d.m.Y", $valid_to_unix);
+
+                    if (($last_fingerprint != '') && ($fingerprint != $last_fingerprint)) {
+                        self::formatPrintLn(['red'], '❌  Fingerprint changed for domain: ' . $domain['domain'] . ' IP: ' . $domain_ip['ip']);
+                        $return_value += 1;
+                    }
+                    if (($last_valid_date != 0) && ($valid_to_unix < $last_valid_date)) {
+                        self::formatPrintLn(['red'], '❌  Certificate valid date changed for domain: ' . $domain['domain'] . ' IP: ' . $domain_ip['ip']);
+                        $return_value += 1;
+                    }
+                    if ($valid_to_unix < time()) {
+                        self::formatPrintLn(['red'], '❌  Certificate expired for domain: ' . $domain['domain'] . ' IP: ' . $domain_ip['ip']);
+                        $return_value += 1;
+                    }
+
+                    if (($valid_to_unix > time()) && (($last_valid_date == 0) || ($valid_to_unix == $last_valid_date))) {
+                        self::formatPrintLn(['green'], '✅  Valid until: ' . $valid_date);
+                    }
+
+
+                    if (($last_fingerprint == '') || ($fingerprint == $last_fingerprint)) {
+                        self::formatPrintLn(['green'], '✅  Fingerprint: ' . $fingerprint);
+                    }
+
+                    $last_fingerprint = $fingerprint;
+                    $last_valid_date = $valid_to_unix;
+
+                    self::unintent();
                 }
                 self::unintent();
             }
         }
-        /*
-
-        $urls[] = array(
-            "name" => "Domain 1 Name (1)",
-            "url" => "https://datencheck.stimmzettel.online",
-            "ip" => "85.214.23.79"
-        );
-
-        $urls[] = array(
-            "name" => "Domain 1 Name (2)",
-            "url" => "https://datencheck.stimmzettel.online",
-            "ip" => "85.214.33.39"
-        );
-
-        if (count($urls) == 0) {
-            self::formatPrintLn(['red'], 'No URLs configured for SSL check.');
-            return 1;
-        }
-
-        self::formatPrintLn(['green'], 'SSL Certificates for configured URLs:');
-
-        foreach ($urls as $value) {
-
-            $ip = $value['ip'];
-            if (filter_var($ip, FILTER_VALIDATE_IP) === false) {
-                self::formatPrintLn(['red'], 'Invalid IP address: ' . $ip);
-                continue;
-            }
-            $orignal_parse = parse_url($value['url'], PHP_URL_HOST);
-            $get = stream_context_create(
-                [
-                    "ssl" => [
-                        'peer_name' => $orignal_parse,
-                        "capture_peer_cert" => TRUE
-                    ]
-                ]
-            );
-            $read = stream_socket_client("ssl://" . $ip . ":443", $errno, $errstr, 30, STREAM_CLIENT_CONNECT, $get);
-            echo "ssl://" . $orignal_parse . ":443" . "\n";
-            // 85.214.23.79
-            $cert = stream_context_get_params($read);
-            $certinfo = openssl_x509_parse($cert['options']['ssl']['peer_certificate']);
-            $valid_to_unix = $certinfo['validTo_time_t'];
-
-            print_r($certinfo);
-            echo "BEGIN:VEVENT\n";
-            // echo "UID:" . uniqid() . "\n";
-            echo "DTSTAMP:" . date("Ymd") . "T" . date("His") . "Z\n";
-            echo "DTSTART:" . date("Ymd", $valid_to_unix) . "T080000Z\n";
-            echo "DTEND:" . date("Ymd", $valid_to_unix) . "T160000Z\n";
-            echo "SUMMARY:SSL Cert - {$value['name']}\n";
-            echo "END:VEVENT\n\n";
-        }
-            */
-
-
-        return 0;
+        return $return_value;
     }
 }
