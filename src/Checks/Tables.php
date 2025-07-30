@@ -49,7 +49,17 @@ class Tables  extends PostCheck
                     'valid_to' => 'datetime',
                     'notes' => 'text'
                 ]
-            ]
+            ],
+            'tualocms_domain_ip_certs' => [
+                'columns' => [
+                    'domain' => 'varchar(128)',
+                    'ip' => 'varchar(255)',
+                    'fingerprint' => 'varchar(255)',
+                    'certificate_valid_from' => 'datetime',
+                    'certificate_valid_to' => 'datetime',
+                    'certificate_checked_on' => 'datetime'
+                ]
+            ],
         ];
         self::tableCheck(
             'cms',
