@@ -2,11 +2,10 @@
 
 namespace Tualo\Office\CMS\Commands\SystemChecks;
 
-use Tualo\Office\Basic\FormatedCommandLineOutput;
-use Tualo\Office\Basic\ISystemCheck;
+use Tualo\Office\Basic\SystemCheck;
 use Tualo\Office\Basic\TualoApplication as App;
 
-class CertCheck extends FormatedCommandLineOutput implements ISystemCheck
+class CertCheck extends SystemCheck
 {
 
     public static function hasClientTest(): bool
