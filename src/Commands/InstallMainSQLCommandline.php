@@ -52,7 +52,6 @@ class InstallMainSQLCommandline implements ICommandline
 
         $files = [
             //            'ddl-cms' => 'setup main ddl ',
-            'middlewares' => 'setup cms middlewares ',
             // 'ds.definition' => 'setup cms ds definition ',
 
             'install/ds_class' => 'setup ds_class',
@@ -63,6 +62,7 @@ class InstallMainSQLCommandline implements ICommandline
             'install/tualocms_middleware' => 'setup tualocms_middleware',
             'install/tualocms_middleware.ds' => 'setup tualocms_middleware.ds',
 
+            'middlewares' => 'setup cms middlewares ',
 
             'install/tualocms_page' => 'setup tualocms_page',
             'install/tualocms_page.ds' => 'setup tualocms_page.ds',
