@@ -125,6 +125,10 @@ class Page implements IRoute
             $db = $session->getDB();
 
             try {
+
+                if (is_null($db)) {
+                    throw new \Exception('Database connection is not available');
+                }
                 $matches['path'] = '/' . $matches['path'];
                 $table = (new DSTable($db, 'view_load_tualocms_page'))->filter(
                     'path',
@@ -282,7 +286,6 @@ class Page implements IRoute
                     return false;
                 }
             } catch (\Exception $e) {
-                echo $e->getMessage();
                 TualoApplication::logger('CMS')->error($e->getMessage());
                 TualoApplication::result('msg', $e->getMessage());
             }
