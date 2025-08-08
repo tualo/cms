@@ -23,7 +23,7 @@
     "tualo/ds": "^1.0",
     "tualo/tualojs": "^1.0",
     "tualo/pug": "^1.0",
-    "tualo/cherry-markdown": "^1.0.1",
+    "tualo/cherry-markdown": "^1.0||dev-main",
     "michelf/php-markdown": "2.0.0"
   },
   "version": "1.2.4"
