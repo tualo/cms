@@ -15,7 +15,11 @@ class Markdown
         return function (string|null $markdownText): string {
             if (is_null($markdownText))  return '';
             $result = MarkdownExtra::defaultTransform($markdownText);
-            if (strpos($result, "<p>") === 0) $result = substr(trim($result), 3, -4);
+            if ((strpos($result, "<p>") === 0)
+                && (substr(trim($result), 3, -4) === '</p>')
+            ) {
+                $result = substr(trim($result), 3, -4);
+            }
             return $result;
         };
     }
@@ -25,7 +29,11 @@ class Markdown
         return function (string|null $markdownText): string {
             if (is_null($markdownText))  return '';
             $result  = MarkdownExtra::defaultTransform($markdownText);
-            if (strpos($result, "<p>") === 0) $result = substr(trim($result), 3, -4);
+            if ((strpos($result, "<p>") === 0)
+                && (substr(trim($result), 3, -4) === '</p>')
+            ) {
+                $result = substr(trim($result), 3, -4);
+            }
             return $result;
         };
     }
