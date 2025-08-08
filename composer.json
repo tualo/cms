@@ -26,5 +26,5 @@
     "tualo/cherry-markdown": "^1.0.1",
     "michelf/php-markdown": "2.0.0"
   },
-  "version": "1.2.2"
+  "version": "1.2.3"
 }
