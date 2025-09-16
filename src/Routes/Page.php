@@ -126,6 +126,8 @@ class Page implements IRoute
 
             try {
 
+
+
                 if (is_null($db)) {
                     throw new \Exception('Database connection is not available');
                 }
