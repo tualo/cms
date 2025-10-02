@@ -74,7 +74,7 @@ EOT;
         if (is_null($user)) throw new \Exception('user not set');
 
         $db = self::getClientDB($clientName);
-        if (is_null($db)) throw new \Exception('clientdb not fount');
+        if (is_null($db)) throw new \Exception('clientdb not found');
 
         if (!file_exists(dirname((string)App::get('basePath')) . '/.htaccess')) {
 

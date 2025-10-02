@@ -7,7 +7,7 @@ use Tualo\Office\Basic\Route;
 use Tualo\Office\Basic\IRoute;
 use Tualo\Office\DS\DSTable;
 
-use Tualo\Office\PUG\PUG;
+use Tualo\Office\PUG\PUG2;
 use Tualo\Office\PUG\PUGRenderingHelper;
 
 use Tualo\Office\CMS\CMSMiddlewareHelper;
@@ -216,7 +216,7 @@ class Page implements IRoute
                         ->read();
                     $data['stylesheets'] = $css->get();
 
-                    PUG::exportPUG($db);
+                    //PUG::exportPUG($db);
                     if (!isset($data['page'])) throw new \Exception('attribute page not found');
 
 
@@ -246,8 +246,12 @@ class Page implements IRoute
                             'keysort' => self::keysort()
                         ]
                     );
+                    $pug = new PUG2($db, []);
+
+
                     $data['cms'] = CMSMiddlewareHelper::$result;
-                    $html = PUG::render(
+
+                    $html = $pug->render(
                         $template,
                         $data
                     );
