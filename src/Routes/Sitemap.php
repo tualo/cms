@@ -13,7 +13,7 @@ use Tualo\Office\PUG\PUGRenderingHelper;
 use Tualo\Office\CMS\CMSMiddlewareHelper;
 use Spatie\Sitemap\SitemapGenerator;
 
-class Sitemap implements IRoute
+class Sitemap extends \Tualo\Office\Basic\RouteWrapper
 {
     public static function default()
     {

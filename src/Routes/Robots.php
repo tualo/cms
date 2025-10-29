@@ -12,7 +12,7 @@ use Tualo\Office\PUG\PUGRenderingHelper;
 
 use Tualo\Office\CMS\CMSMiddlewareHelper;
 
-class Robots implements IRoute
+class Robots extends \Tualo\Office\Basic\RouteWrapper
 {
 
     public static function register()

@@ -14,7 +14,7 @@ use Tualo\Office\Basic\IRoute;
  * It checks for double dots in the path to prevent directory traversal attacks.
  */
 
-class PublicRoute implements IRoute
+class PublicRoute extends \Tualo\Office\Basic\RouteWrapper
 {
 
     public static function register()

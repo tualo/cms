@@ -12,7 +12,7 @@ use Tualo\Office\PUG\PUGRenderingHelper;
 
 use Tualo\Office\CMS\CMSMiddlewareHelper;
 
-class Page implements IRoute
+class Page extends \Tualo\Office\Basic\RouteWrapper
 {
 
     public static function datetime(): callable
