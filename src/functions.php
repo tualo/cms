@@ -15,6 +15,7 @@ require_once "Routes/Route.php";
 require_once "Routes/Robots.php";
 require_once "Routes/Sitemap.php";
 require_once "Routes/Public.php";
+require_once "Routes/ReverseProxy.php";
 
 require_once "Middlewares/Middleware.php";
 require_once "Commands/InstallMainSQLCommandline.php";
