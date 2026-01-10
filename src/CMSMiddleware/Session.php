@@ -18,6 +18,11 @@ class Session
     {
         return isset($_SESSION[$key]);
     }
+    public function id(): string
+    {
+        @session_start();
+        return session_id();
+    }
     public function set($key, $value): Session
     {
         @session_start();
