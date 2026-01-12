@@ -36,7 +36,7 @@ class AuthTokens extends FormatedCommandLineOutput implements ISystemCheck
         if (is_null($clientdb)) return 1;
 
         self::formatPrintLn(['blue'], 'AuthTokens SystemCheck:');
-        $templateSql = 'select * from view_session_oauth_check where path="tualocms/page/*" and validuntil>now()';
+        $templateSql = 'select * from view_session_oauth_check where path="/tualocms/page/*" and validuntil>now()';
         $data = $clientdb->direct($templateSql);
         if (count($data) == 0) {
             self::formatPrintLn(['red'], 'No active auth tokens found.');
@@ -45,12 +45,20 @@ class AuthTokens extends FormatedCommandLineOutput implements ISystemCheck
 
         self::formatPrintLn(['green'], 'Active auth tokens found.');
 
-        $templateSql = 'select * from view_session_oauth_check where path="tualocms/page/*" and validuntil + interval - ' . App::configuration("cms", "warn_days_before", 15) . ' day < now()';
+
+
+        if (App::configuration("cms", "warn_days_before", false) === false) {
+            self::formatPrintLn(['yellow'], "cms.warn_days_before not set, using default 15 days.");
+        }
+
+        /*
+        $templateSql = 'select * from view_session_oauth_check where path="/tualocms/page/*" and validuntil + interval - ' . App::configuration("cms", "warn_days_before", 15) . ' day < now()';
         $data = $clientdb->direct($templateSql);
         if (count($data) != 0) {
             self::formatPrintLn(['red'], 'There are tokens about to expire.');
             return 3;
         }
+        */
 
 
         if (!file_exists(dirname((string)App::get('basePath')) . '/.htaccess')) {
@@ -63,19 +71,31 @@ class AuthTokens extends FormatedCommandLineOutput implements ISystemCheck
 
         $token_found = false;
         $token_valid_until = null;
-        $token = preg_match('/RewriteRule \^\(.\*\)\$ \/\~\/([a-f0-9\-]{36})\/tualocms\/page\/\1 \[PT\]/', $htaccess_content, $matches);
-        if ($token && isset($matches[1])) {
-            $token_value = $matches[1];
-            $templateSql = 'select * from view_session_oauth_check where path="/tualocms/page/*" and token={token} and validuntil + interval - ' . App::configuration("cms", "warn_days_before", 15) . ' day < now()';
+        preg_match('/~\/(?P<token>[a-f0-9\-]{36})\/tualocms\/page\//m', $htaccess_content, $matches);
+        self::formatPrintLn(['italic'], "Extracted token from .htaccess: " . (isset($matches['token']) ? $matches['token'] : 'none'));
+        if (isset($matches['token'])) {
+            $token_value = $matches['token'];
+
+            $templateSql = 'select * from view_session_oauth_check where path="/tualocms/page/*" and id={token} and validuntil  > now()';
             $data = $clientdb->direct($templateSql, ['token' => $token_value]);
             if (count($data) != 0) {
                 $token_found = true;
                 $token_valid_until = $data[0]['validuntil'];
                 self::formatPrintLn(['green'], 'Valid auth token found in .htaccess file, valid until ' . $token_valid_until . '.');
             }
+
+
+            $templateSql = 'select * from view_session_oauth_check where path="/tualocms/page/*" and id={token} and validuntil + interval - ' . App::configuration("cms", "warn_days_before", 15) . ' day < now()';
+            $data = $clientdb->direct($templateSql, ['token' => $token_value]);
+            if (count($data) != 0) {
+                $token_found = true;
+                $token_valid_until = $data[0]['validuntil'];
+                self::formatPrintLn(['red'], 'Valid auth token found in .htaccess file, but are tokens about to expire.***');
+                return 3;
+            }
         }
         if (!$token_found) {
-            self::formatPrintLn(['red'], 'No valid auth token found in .htaccess file vaild more than ' . App::configuration("cms", "warn_days_before", 15) . ' days.');
+            self::formatPrintLn(['red'], 'No valid auth token found in .htaccess file valid more than ' . App::configuration("cms", "warn_days_before", 15) . ' days.');
             return 5;
         }
 

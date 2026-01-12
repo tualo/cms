@@ -104,6 +104,8 @@ EOT;
                     break;
                 }
             }
+        } else {
+            PostCheck::formatPrintLn(['yellow'], "\t .htaccess already exists.");
         }
     }
 }
