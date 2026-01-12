@@ -23,8 +23,8 @@ RewriteRule ^(.*)$ /{basename}/~/{token}/tualocms/page/$1 [PT]
 
 
 Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
-Header set Permissions-Policy "camera=(), microphone=(), usb=(), geolocation=()"
-Header always set Content-Security-Policy "base-uri 'none', base-uri 'self'; default-src 'self' data:; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; form-action 'self'; img-src 'self' data:"
+# Header set Permissions-Policy "camera=(), microphone=(), usb=(), geolocation=()"
+# Header always set Content-Security-Policy "base-uri 'none', base-uri 'self'; default-src 'self' data:; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; form-action 'self'; img-src 'self' data:"
 Header set X-Content-Type-Options nosniff
 Header set X-Frame-Options "SAMEORIGIN"
 Header set X-XSS-Protection "1; mode=block"
