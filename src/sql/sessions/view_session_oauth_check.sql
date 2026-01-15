@@ -26,3 +26,5 @@ with ses as (
 select * from ses;
 
 
+call fill_ds('view_session_oauth_check');
+call fill_ds_column('view_session_oauth_check');
