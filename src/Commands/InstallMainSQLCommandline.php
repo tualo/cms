@@ -127,6 +127,16 @@ class InstallMainSQLCommandline implements ICommandline
             'install/view_load_tualocms_page_headers.ds' => 'setup view_load_tualocms_page_headers.ds',
 
             'sessions/view_session_oauth_check' => 'setup view_session_oauth_check',
+
+            'install/tualocms_domains' => 'setup tualocms_domains',
+            'install/tualocms_domains.ds' => 'setup tualocms_domains.ds',
+
+            'install/tualocms_domains_ip' => 'setup tualocms_domains_ip',
+            'install/tualocms_domains_ip.ds' => 'setup tualocms_domains_ip.ds',
+
+            'install/tualocms_domains_certs' => 'setup tualocms_domains_certs',
+            'install/tualocms_domains_certs.ds' => 'setup tualocms_domains_certs.ds',
+
         ];
 
 

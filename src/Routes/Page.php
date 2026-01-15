@@ -246,6 +246,7 @@ class Page extends \Tualo\Office\Basic\RouteWrapper
                             'keysort' => self::keysort()
                         ]
                     );
+
                     $pug = new PUG2($db, []);
 
 
