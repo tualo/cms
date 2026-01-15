@@ -266,6 +266,41 @@ class Page extends \Tualo\Office\Basic\RouteWrapper
                 } else {
 
 
+
+                    if (Route::checkDoubleDots($matches, 'path', 'Path contains ".."')) {
+                        if (!isset($matches['path']) || $matches['path'] == '') {
+                            TualoApplication::body('Path not found');
+                            TualoApplication::contenttype('text/plain');
+                            http_response_code(404);
+                            return;
+                        }
+
+
+                        $publicpath =  TualoApplication::configuration(
+                            'tualo-cms',
+                            'public_path'
+                        );
+
+                        if ($publicpath !== false) {
+                            if (file_exists(
+                                str_replace(
+                                    '//',
+                                    '/',
+                                    implode('/', [
+                                        $publicpath,
+                                        $matches['path']
+                                    ])
+                                )
+                            )) {
+                                TualoApplication::etagFile(str_replace('//', '/', implode('/', [
+                                    $publicpath,
+                                    $matches['path']
+                                ])), true);
+                                Route::$finished = true;
+                                http_response_code(200);
+                            }
+                        }
+                    }
                     /*
                     if (strpos($matches['path'], '/img/') === 0) {
                         return false;
