@@ -132,10 +132,10 @@ class InstallMainSQLCommandline implements ICommandline
             'install/tualocms_domains.ds' => 'setup tualocms_domains.ds',
 
             'install/tualocms_domains_ip' => 'setup tualocms_domains_ip',
-            'install/tualocms_domains_ip.ds' => 'setup tualocms_domains_ip.ds',
+            //'install/tualocms_domains_ip.ds' => 'setup tualocms_domains_ip.ds',
 
             'install/tualocms_domains_certs' => 'setup tualocms_domains_certs',
-            'install/tualocms_domains_certs.ds' => 'setup tualocms_domains_certs.ds',
+            //'install/tualocms_domains_certs.ds' => 'setup tualocms_domains_certs.ds',
 
         ];
 
