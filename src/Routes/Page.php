@@ -210,11 +210,13 @@ class Page extends \Tualo\Office\Basic\RouteWrapper
                     $template = $data['pug_file'];
 
 
+                    /*
                     $css = (new DSTable($db, 'ds_renderer_stylesheet_groups_assign'))
                         ->filter('active', '=', 1)
                         ->filter('pug_id', '=', $template)
                         ->read();
                     $data['stylesheets'] = $css->get();
+                    */
 
                     //PUG::exportPUG($db);
                     if (!isset($data['page'])) throw new \Exception('attribute page not found');
