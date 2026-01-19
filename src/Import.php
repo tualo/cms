@@ -2,6 +2,7 @@
 
 namespace Tualo\Office\CMS;
 
+use finfo;
 use Tualo\Office\Basic\TualoApplication as App;
 
 
@@ -35,6 +36,7 @@ class Import
 
         foreach ($files as $file) {
             if (!is_dir($path . '/' . $file)) {
+                $id = str_replace('.pug', '', $file);
                 $data = file_get_contents($path . '/' . $file);
                 $type = 'insert ignore';
                 if ($replace) $type = 'replace';
@@ -43,11 +45,11 @@ class Import
                         id,
                         template
                     ) values (
-                        {filename},
+                        {id},
                         {content}
                     )
                 ', [
-                    'filename' => $dbpathprefix . $file,
+                    'id' => $dbpathprefix . $id,
                     'content' => $data
                 ]);
             }
