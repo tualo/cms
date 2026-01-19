@@ -1,0 +1,8 @@
+case template
+    when 'page-section'
+        include page-section
+    //-
+        when 'page-your-section-templates'
+            include page-your-section-templates
+    default
+        span !{template} existiert nicht
