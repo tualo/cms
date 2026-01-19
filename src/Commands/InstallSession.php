@@ -13,6 +13,7 @@ class InstallSession extends CommandLineInstallSQL  implements ICommandline
     }
     public static $shortName  = 'cms-auth-views';
     public static $files = [
-        'sessions/view_session_oauth_check' => 'setup view_session_oauth_check '
+        'sessions/view_session_oauth_check' => 'setup view_session_oauth_check ',
+        'sessions/add_group' => 'setup sql sessions/add_group'
     ];
 }
