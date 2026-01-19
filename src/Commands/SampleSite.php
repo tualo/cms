@@ -18,6 +18,6 @@ class SampleSite extends CommandLineInstallSQL  implements ICommandline
     }
     public static $shortName  = 'import-sample-site';
     public static $files = [
-        'install/data/sample-site' => 'setup install/data/sample-site'
+        'install/data/sample-page' => 'setup install/data/sample-page'
     ];
 }
