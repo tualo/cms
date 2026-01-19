@@ -43,6 +43,8 @@ EOT;
         $cli->command(self::getCommandName())
             ->opt('client', 'the clientsystem', true, 'string')
             ->opt('user', 'the existing user', true, 'string')
+            ->opt('silent', 'do not ask', false, 'boolean')
+            ->opt('recreate', 'recreate .htaccess', false, 'boolean')
             ->description('setupapache get htaccess.')
         ;
     }
@@ -76,12 +78,15 @@ EOT;
         $db = self::getClientDB($clientName);
         if (is_null($db)) throw new \Exception('clientdb not found');
 
-        if (!file_exists(dirname((string)App::get('basePath')) . '/.htaccess')) {
+        if ($args->getOpt('recreate', false) || !file_exists(dirname((string)App::get('basePath')) . '/.htaccess')) {
 
             $prompt = [
                 "\t" . 'do you want to create the .htaccess in "' . dirname((string)App::get('basePath')) . '" now? [y|n|c] '
             ];
-            while (in_array($line = readline(implode("\n", $prompt)), ['yes', 'y', 'n', 'no', 'c'])) {
+            if ($args->getOpt('silent', false)) {
+                $line = 'y';
+            }
+            while ($args->getOpt('silent', false) || in_array($line = readline(implode("\n", $prompt)), ['yes', 'y', 'n', 'no', 'c'])) {
                 if ($line == 'c') exit();
                 if ($line == 'y') {
                     file_put_contents(
