@@ -14,7 +14,10 @@ use Tualo\Office\CMS\CMSMiddlewareHelper;
 
 class Page extends \Tualo\Office\Basic\RouteWrapper
 {
-
+    public static function scope(): string
+    {
+        return 'cms.page';
+    }
     public static function datetime(): callable
     {
         return function (string $dt): \DateTime {
@@ -299,6 +302,6 @@ class Page extends \Tualo\Office\Basic\RouteWrapper
                 TualoApplication::logger('CMS')->error($e->getMessage());
                 TualoApplication::result('msg', $e->getMessage());
             }
-        }, ['get', 'post'], false);
+        }, ['get', 'post'], true, [], self::scope());
     }
 }
