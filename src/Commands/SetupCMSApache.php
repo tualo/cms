@@ -89,6 +89,7 @@ EOT;
             while ($args->getOpt('silent', false) || in_array($line = readline(implode("\n", $prompt)), ['yes', 'y', 'n', 'no', 'c'])) {
                 if ($line == 'c') exit();
                 if ($line == 'y') {
+                    PostCheck::formatPrint(['blue'], "creating ../.htaccess\n");
                     file_put_contents(
                         dirname((string)App::get('basePath')) . '/.htaccess',
                         DataRenderer::renderTemplate(
