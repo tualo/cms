@@ -23,6 +23,7 @@ require_once "Commands/InstallMenuSQLCommandline.php";
 require_once "Commands/InstallSession.php";
 require_once "Commands/RegisterClient.php";
 require_once "Commands/SetupCMSApache.php";
+require_once "Commands/Import.php";
 require_once "Commands/SystemCheck.php";
 require_once "Commands/SystemChecks/AuthTokens.php";
 require_once "Commands/SystemChecks/CertCheck.php";

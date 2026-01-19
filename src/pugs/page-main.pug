@@ -1,0 +1,44 @@
+.
+doctype html
+html(lang='de')
+    head
+        block head
+            title=cms.txt('site_title')
+            meta(charset='utf-8')
+			meta(
+                name="format-detection"
+                content="telephone=no")
+            meta(
+                name="viewport"
+                content="width=device-width, initial-scale=1, shrink-to-fit=no")
+            meta(
+                http-equiv="content-type"
+                content="text/html; charset=UTF-8")
+            meta(
+                http-equiv="content-script-type"
+                content="text/javascript")
+            meta(
+                http-equiv="content-style-type"
+                content="text/css")
+            meta(
+                name="description"
+                content="Wahl zur IHK-Vollversammlung 2026.")
+            meta(
+                name="keywords"
+                content= cms.txt('site_title') ) 
+            meta(
+                name="language_keyword"
+                content="DE")
+            link(rel="icon" type="image/png" sizes="32x32" href="/public/favicon.ico")
+
+            //- CSS from tualo/sass
+            link(
+            	href="./scss/scss.min.css" 
+                rel="stylesheet" 
+            )
+	body
+        div.page
+            include page-header
+            .page-content
+                block content
+            include page-footer

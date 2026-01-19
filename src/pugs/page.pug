@@ -1,0 +1,7 @@
+extends page-main
+
+block content
+    if page.sections
+        for section in page.sections
+            - var template = section.template
+            include page-include-sections
