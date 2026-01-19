@@ -64,7 +64,7 @@ class RegisterClient implements ICommandline
         $defaultDays = App::configuration('cms', 'oauth_days', 365);
         $token = $session->registerOAuth($force = false, $anyclient = false, $path = '/tualocms/page/*', $name = 'CMS (Public)', $device = gethostname());
         $session->oauthValidDays($token, $defaultDays);
-        echo $token .           "\n";
+        // echo $token .           "\n";
         return $token;
     }
 
