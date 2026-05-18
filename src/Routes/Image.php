@@ -41,7 +41,7 @@ class Image extends \Tualo\Office\Basic\RouteWrapper
                 exit;
             }
 
-            App::body(base64_decode($data));
+            App::body(($data));
             BasicRoute::$finished = true;
             http_response_code(200);
         }, ['get'], true);
