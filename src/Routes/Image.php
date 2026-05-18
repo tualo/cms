@@ -27,6 +27,7 @@ class Image extends \Tualo\Office\Basic\RouteWrapper
 
             list($mime, $data) =  explode(',', $imagedata);
             $etag = md5($data);
+            $mime = str_replace(";base64", "", $mime);
             App::contenttype(str_replace('data:', '', $mime));
 
 
@@ -41,7 +42,7 @@ class Image extends \Tualo\Office\Basic\RouteWrapper
                 exit;
             }
 
-            App::body(($data));
+            App::body(base64_decode($data));
             BasicRoute::$finished = true;
             http_response_code(200);
         }, ['get'], true);
