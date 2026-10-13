@@ -11,7 +11,10 @@ class Logger
 
     public static function logger(): mixed
     {
-        return App::logger('CMSMiddleware-Logger');
+
+        return function () {
+            return App::logger('CMSMiddleware-Logger');
+        };
     }
 
     public static function run(array &$request, array &$result)
