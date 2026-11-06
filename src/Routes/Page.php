@@ -85,13 +85,13 @@ class Page extends \Tualo\Office\Basic\RouteWrapper
                 $class = new \ReflectionClass($cmsmiddleware);
                 TualoApplication::timing("cmsMiddleware $cmsmiddleware");
                 if (!$class->hasMethod('run')) {
-                    TualoApplication::logger('CMS')->error($cmsmiddleware . ' has no run method');
+                    TualoApplication::logger('CMS')->error($cmsmiddleware . ' has no run method', []);
                 } else {
                     $cmsmiddleware::run($request, $result);
                     TualoApplication::timing("cmsMiddleware $cmsmiddleware after run");
                 }
             } catch (\Exception $e) {
-                TualoApplication::logger('CMS')->error($e->getMessage());
+                TualoApplication::logger('CMS')->error($e->getMessage(), []);
             }
         }
         CMSMiddlewareHelper::$request = $request;
@@ -299,7 +299,7 @@ class Page extends \Tualo\Office\Basic\RouteWrapper
                     return false;
                 }
             } catch (\Exception $e) {
-                TualoApplication::logger('CMS')->error($e->getMessage());
+                TualoApplication::logger('CMS')->error($e->getMessage(), []);
                 TualoApplication::result('msg', $e->getMessage());
             }
         }, ['get', 'post'], true, [], self::scope());

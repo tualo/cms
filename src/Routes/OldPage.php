@@ -46,13 +46,13 @@ class OldPage extends \Tualo\Office\Basic\RouteWrapper
                 $class = new \ReflectionClass($cmsmiddleware);
                 TualoApplication::timing("cmsMiddleware $cmsmiddleware");
                 if (!$class->hasMethod('run')) {
-                    TualoApplication::logger('CMS')->error($cmsmiddleware . ' has no run method');
+                    TualoApplication::logger('CMS')->error($cmsmiddleware . ' has no run method', []);
                 } else {
                     $cmsmiddleware::run($request, $result);
                     TualoApplication::timing("cmsMiddleware $cmsmiddleware after run");
                 }
             } catch (\Exception $e) {
-                TualoApplication::logger('CMS')->error($e->getMessage());
+                TualoApplication::logger('CMS')->error($e->getMessage(), []);
             }
         }
         CMSMiddlewareHelper::$request = $request;
@@ -147,7 +147,7 @@ class OldPage extends \Tualo\Office\Basic\RouteWrapper
                     exit();
                 }
             } catch (\Exception $e) {
-                TualoApplication::logger('CMS')->error($e->getMessage());
+                TualoApplication::logger('CMS')->error($e->getMessage(), []);
                 TualoApplication::result('msg', $e->getMessage());
             }
         }, array('get', 'post'), true);
