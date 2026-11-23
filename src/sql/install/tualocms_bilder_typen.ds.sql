@@ -67,7 +67,7 @@ VALUES
         'tualocms_bilder_typen{DATE}',
         0,
         1000,
-        0,
+        1,
         'Tualo.DataSets.ListView',
         1,
         'Tualo.DataSets.model.Basic'
